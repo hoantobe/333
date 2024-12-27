@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+  <article class="blog-post">
+    <h1 class="blog-post-title">{{ post.title }}</h1>
+    <div class="blog-post-meta">
+      <span class="date">
+        <i class="far fa-calendar-alt"></i> 
+        {{ post.date_posted.strftime('%d-%m-%Y') }}
+      </span>
+      <span class="author">
+        <i class="far fa-user"></i> 
+        {{ post.author.username }}
+      </span>
+    </div>
+
+    <div class="blog-post-content">
+      <div class="adsense-container text-center my-4">
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-XXXXXXX" 
+             data-ad-slot="XXXXXXX" 
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </div>
+
+      <div class="toc-wrapper"> 
+        <button class="toc-toggle">
+          <i class="fas fa-bars"></i> Mục lục
+        </button>
+        <div class="toc sticky-toc"> 
+          <h2>Mục lục</h2>
+          <ul>
+            {% for heading in headings %}
+              <li>
+                <a href="#{{ heading.id }}">{{ heading.text | striptags }}</a> 
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      <div class="content-wrapper">
+        <div class="main-content">
+          <h2>Nội dung chính</h2>
+          {{ post.content|safe }}
+        </div>
+        <div class="sidebar">
+          <div class="adsense-container">
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-XXXXXXX" 
+                 data-ad-slot="XXXXXXX" 
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+          </div>
+
+          <div class="adsense-container">
+            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-XXXXXXX" 
+                 data-ad-slot="XXXXXXX" 
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>
+                 (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+          </div>
+        </div>
+      </div>
+
+      <div class="adsense-container text-center my-4">
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <ins class="adsbygoogle"
+             style="display:block"
+             data-ad-client="ca-pub-XXXXXXX" 
+             data-ad-slot="XXXXXXX" 
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </div>
+    </div>
+
+    <div class="related-posts mt-4">
+      <h3>Bài viết liên quan</h3>
+      <ul>
+        {% for related_post in related_posts %}
+          <li><a href="{{ related_post.get_absolute_url }}">{{ related_post.title }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="social-share mt-4">
+      <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" class="btn btn-primary">
+        Chia sẻ Facebook
+      </a>
+      <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}" target="_blank" class="btn btn-info">
+        Chia sẻ Twitter
+      </a>
+    </div>
+    <div class="navigation mt-4">
+        <div class="prev-post">
+          {% if prev_post %}
+            <a href="{{ url_for('view_post', slug=prev_post.slug) }}">
+              <i class="fas fa-chevron-left"></i> Bài viết trước
+            </a>
+          {% endif %}
+        </div>
+        <div class="next-post">
+          {% if next_post %}
+            <a href="{{ url_for('view_post', slug=next_post.slug) }}">
+              Bài viết tiếp theo <i class="fas fa-chevron-right"></i>
+            </a>
+          {% endif %}
+        </div>
+      </div>
+  </article>
+</div>
+
+<style>
+    .navigation {
+  display: flex;
+  justify-content: space-between; /* Canh đều hai nút */
+  align-items: center; /* Canh giữa theo chiều dọc */
+  margin-top: 40px; /* Khoảng cách với nội dung phía trên */
+}
+
+.navigation a {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #f8f9fa; /* Màu nền nút */
+  border: 1px solid #ddd; /* Đường viền nút */
+  border-radius: 5px; /* Bo góc nút */
+  text-decoration: none; /* Loại bỏ gạch chân */
+  color: #333; /* Màu chữ */
+  transition: all 0.3s ease; /* Hiệu ứng hover */
+}
+
+.navigation a:hover {
+  background-color: #e9ecef; /* Màu nền khi hover */
+}
+ .toc-wrapper {
+    position: relative; 
+  }
+
+  .toc-toggle {
+    position: sticky;
+    top: 20px;
+    left: 20px; 
+    background-color: #f8f9fa; 
+    border: 1px solid #ddd; 
+    border-radius: 5px; 
+    padding: 10px; 
+    cursor: pointer;
+  }
+
+  .sticky-toc {
+    position: sticky;
+    display: none; 
+    position: absolute;
+    top: 50px; 
+    left: 20px; 
+    width: 400px; 
+    max-height: 80vh;
+    overflow-y: auto;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    z-index: 10; 
+  }
+
+        .main-content {
+            flex: 1;
+            margin-right: 20px;
+        }
+
+        .sidebar {
+            flex: 0 0 300px;
+        }
+
+        .blog-post {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .blog-post-title {
+            font-size: 2.5rem;
+            color: #333;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .blog-post-meta {
+            font-size: 0.9rem;
+            color: #888;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .blog-post-meta span {
+            margin-right: 1rem;
+        }
+
+        .blog-post-content {
+            font-size: 1.1rem;
+            color: #444;
+            line-height: 1.8;
+        }
+
+        .blog-post-content img {
+            max-width: 100%;
+            height: auto;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+
+        .adsense-container {
+            margin: 2rem auto;
+            text-align: center;
+        }
+
+        .related-posts ul {
+            padding: 0;
+            list-style-type: none;
+        }
+
+        .related-posts ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .social-share .btn {
+            margin-right: 10px;
+        }
+
+        .sidebar {
+            float: right;
+            margin-left: 20px;
+        }
+    </style>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        // Lấy tất cả các thẻ H2 trong nội dung bài viết
+        const headings = document.querySelectorAll('.main-content h2');
+
+        // Loại bỏ các thuộc tính không cần thiết và thẻ HTML bên trong thẻ <h2>
+        headings.forEach(heading => {
+            heading.removeAttribute('class');
+            heading.removeAttribute('style');
+            heading.innerHTML = heading.innerText; // Chỉ giữ lại text
+        });
+
+        // Tạo ID cho mỗi thẻ H2
+        headings.forEach((heading, index) => {
+            heading.id = `heading-${index + 1}`;
+        });
+
+        // Lấy tất cả các liên kết trong mục lục
+        const tocLinks = document.querySelectorAll('.toc a');
+
+        // Thêm sự kiện click cho mỗi liên kết
+        tocLinks.forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+         // Xử lý sự kiện click cho nút toggle
+    const tocToggle = document.querySelector('.toc-toggle');
+    const stickyToc = document.querySelector('.sticky-toc');
+
+    tocToggle.addEventListener('click', () => {
+      stickyToc.style.display = stickyToc.style.display === 'none' ? 'block' : 'none';
+     });
+      });
+   
+</script>
+{% endblock %}

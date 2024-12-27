@@ -1,0 +1,261 @@
+{% extends "admin/dashboard.html" %}
+
+{% block admin_content %}
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4>Quản lý đơn hàng</h4>
+        <div class="btn-group">
+            <button class="btn btn-success" onclick="exportOrders('excel')">
+                <i class="fas fa-file-excel"></i> Xuất Excel
+            </button>
+            <button class="btn btn-danger" onclick="exportOrders('pdf')">
+                <i class="fas fa-file-pdf"></i> Xuất PDF
+            </button>
+        </div>
+    </div>
+    <div class="card-body">
+        <!-- Bộ lọc -->
+        <div class="row mb-3">
+            <div class="col-md-3">
+                <label for="statusFilter">Bộ lọc trạng thái</label>
+                <select class="form-control" id="statusFilter" name="statusFilter">
+                    <option value="">Tất cả trạng thái</option>
+                    <option value="pending">Chờ xử lý</option>
+                    <option value="processing">Đang xử lý</option>
+                    <option value="completed">Đã hoàn thành</option>
+                    <option value="cancelled">Đã hủy</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="dateFilter">Bộ lọc ngày</label>
+                <input type="date" class="form-control" id="dateFilter" placeholder="Chọn ngày">
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control" id="searchInput" placeholder="Tìm kiếm đơn hàng...">
+            </div>
+        </div>
+
+        <!-- Bảng đơn hàng -->
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Mã đơn</th>
+                        <th>Khách hàng</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                        <th>Ngày đặt</th>
+                        <th>Thanh toán</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td>#{{ order.id }}</td>
+                        <td>
+                            {{ order.shipping_name }}<br>
+                            <small class="text-muted">{{ order.shipping_phone }}</small>
+                        </td>
+                        <td>{{ "{:,.0f}".format(order.total_price) }}đ</td>
+                        <td>
+                            <select class="form-control form-control-sm status-select" 
+                                    title="Chọn trạng thái" 
+                                    onchange="updateOrderStatus('{{ order.id }}', this.value)">
+                                <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>
+                                    Chờ xử lý
+                                </option>
+                                <option value="processing" {% if order.status == 'processing' %}selected{% endif %}>
+                                    Đang xử lý
+                                </option>
+                                <option value="completed" {% if order.status == 'completed' %}selected{% endif %}>
+                                    Đã hoàn thành
+                                </option>
+                                <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>
+                                    Đã hủy
+                                </option>
+                            </select>
+                        </td>
+                        <td>
+                            {{ order.created_at.strftime('%d-%m-%Y') }}<br>
+                            <small class="text-muted">{{ order.created_at.strftime('%H:%M') }}</small>
+                        </td>
+                        <td>{{ order.payment_method }}</td>
+                        <td>
+                            <div class="btn-group">
+                                <button type="button" 
+                                        class="btn btn-sm btn-info" 
+                                        title="Xem chi tiết" 
+                                        onclick="viewOrderDetails({{ order.id }})">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button type="button" 
+                                        class="btn btn-sm btn-danger" 
+                                        title="Xóa đơn hàng" 
+                                        onclick="confirmDelete({{ order.id }})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal chi tiết đơn hàng -->
+<div class="modal fade" id="orderDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Chi tiết đơn hàng #<span id="orderNumber"></span></h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="orderDetails">
+                <!-- Nội dung sẽ được cập nhật bằng JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" onclick="printOrder()">
+                    <i class="fas fa-print"></i> In đơn hàng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+// Xem chi tiết đơn hàng
+function viewOrderDetails(orderId) {
+    fetch(`/admin/order/${orderId}/details`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('orderNumber').textContent = data.id;
+            
+            const detailsHtml = `
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h6>Thông tin khách hàng</h6>
+                        <p>Tên: ${data.shipping_name}</p>
+                        <p>SĐT: ${data.shipping_phone}</p>
+                        <p>Địa chỉ: ${data.shipping_address}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6>Thông tin đơn hàng</h6>
+                        <p>Ngày đặt: ${data.created_at}</p>
+                        <p>Phương thức thanh toán: ${data.payment_method}</p>
+                        <p>Trạng thái: ${data.status}</p>
+                    </div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Sản phẩm</th>
+                            <th>Biến thể</th>
+                            <th>Giá</th>
+                            <th>Số lượng</th>
+                            <th>Tổng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.items.map(item => `
+                            <tr>
+                                <td>${item.product_name}</td>
+                                <td>${item.variant_name}</td>
+                                <td>${item.price.toLocaleString()}đ</td>
+                                <td>${item.quantity}</td>
+                                <td>${(item.price * item.quantity).toLocaleString()}đ</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="4" class="text-right"><strong>Tổng cộng:</strong></td>
+                            <td><strong>${data.total_price.toLocaleString()}đ</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            `;
+            
+            document.getElementById('orderDetails').innerHTML = detailsHtml;
+            $('#orderDetailsModal').modal('show');
+        });
+}
+
+// Cập nhật trạng thái đơn hàng
+function updateOrderStatus(orderId, status) {
+    fetch(`/admin/order/${orderId}/status`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ status: status })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Có thể thêm thông báo thành công
+        } else {
+            alert('Có lỗi xảy ra khi cập nhật trạng thái đơn hàng');
+        }
+    });
+}
+
+// Xuất đơn hàng
+function exportOrders(format) {
+    window.location.href = `/admin/orders/export/${format}`;
+}
+
+// In đơn hàng
+function printOrder() {
+    const printContent = document.getElementById('orderDetails').innerHTML;
+    const originalContent = document.body.innerHTML;
+    
+    document.body.innerHTML = printContent;
+    window.print();
+    document.body.innerHTML = originalContent;
+}
+
+// Lọc đơn hàng
+document.getElementById('statusFilter').addEventListener('change', function() {
+    filterOrders();
+});
+
+document.getElementById('dateFilter').addEventListener('change', function() {
+    filterOrders();
+});
+
+document.getElementById('searchInput').addEventListener('keyup', function() {
+    filterOrders();
+});
+
+function filterOrders() {
+    const status = document.getElementById('statusFilter').value;
+    const date = document.getElementById('dateFilter').value;
+    const search = document.getElementById('searchInput').value.toLowerCase();
+    
+    const rows = document.querySelectorAll('tbody tr');
+    
+    rows.forEach(row => {
+        const statusMatch = !status || row.querySelector('select').value === status;
+        const dateMatch = !date || row.querySelector('td:nth-child(5)').textContent.includes(date);
+        const searchMatch = !search || 
+            row.querySelector('td:nth-child(1)').textContent.toLowerCase().includes(search) ||
+            row.querySelector('td:nth-child(2)').textContent.toLowerCase().includes(search);
+        
+        if (statusMatch && dateMatch && searchMatch) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+</script>
+{% endblock %} 

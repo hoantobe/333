@@ -1,0 +1,49 @@
+<div class="modal-header">
+    <h5 class="modal-title">{{ product.name }}</h5>
+    <button type="button" class="close close-modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="{{ url_for('static', filename='img/' + product.image_files[0]) }}" 
+                 class="img-fluid" alt="{{ product.name }}">
+        </div>
+        <div class="col-md-6">
+            <div class="product-details">
+                <div class="price-box">
+                    {% if product.discount_price %}
+                    <span class="current-price">{{ product.discount_price | number_format(0, ',', '.') }}₫</span>
+                    <span class="original-price">{{ product.price | number_format(0, ',', '.') }}₫</span>
+                    {% else %}
+                    <span class="current-price">{{ product.price | number_format(0, ',', '.') }}₫</span>
+                    {% endif %}
+                </div>
+                
+                <div class="product-description">
+                    {{ product.description }}
+                </div>
+                
+                <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="post">
+                    <div class="form-group">
+                        <label for="variant" class="form-label">Chọn biến thể:</label>
+                        <select id="variant" name="variant" class="form-control" required>
+                            <option value="">-- Chọn biến thể --</option>
+                            {% for variant in variants %}
+                            <option value="{{ variant.id }}">{{ variant.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="quantity" class="form-label">Số lượng:</label>
+                        <input id="quantity" type="number" name="quantity" value="1" min="1" class="form-control">
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Thêm vào giỏ hàng</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div> 

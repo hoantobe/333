@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Thêm Người Dùng Mới</h2>
+    <form method="POST" action="{{ url_for('add_user') }}">
+        <div class="form-group">
+            <label for="username">Tên người dùng</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Mật khẩu</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <div class="form-check mb-3">
+            <input type="checkbox" class="form-check-input" id="is_admin" name="is_admin">
+            <label class="form-check-label" for="is_admin">Là admin</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Thêm người dùng</button>
+        <a href="{{ url_for('manage_users') }}" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>
+{% endblock %} 

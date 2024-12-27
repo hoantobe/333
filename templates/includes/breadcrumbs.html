@@ -1,0 +1,129 @@
+<div class="breadcrumbs">
+    <div class="container">
+        <div class="breadcrumbs-wrapper">
+            <ul class="breadcrumbs-list">
+                <li>
+                    <a href="{{ url_for('home') }}">Trang chủ</a>
+                </li>
+
+                {% if request.endpoint != 'home' %}
+                    {% if category %}
+                        <li>
+                            <span class="separator">/</span>
+                            <a href="{{ url_for('products') }}">Sản phẩm</a>
+                        </li>
+                        <li>
+                            <span class="separator">/</span>
+                            <span class="current">{{ category.name }}</span>
+                        </li>
+                    {% elif product %}
+                        <li>
+                            <span class="separator">/</span>
+                            <a href="{{ url_for('products') }}">Sản phẩm</a>
+                        </li>
+                        <li>
+                            <span class="separator">/</span>
+                            <a href="{{ url_for('products', category=product.category.name) }}">{{ product.category.name }}</a>
+                        </li>
+                        <li>
+                            <span class="separator">/</span>
+                            <span class="current">{{ product.name }}</span>
+                        </li>
+                    {% elif request.path == '/search' %}
+                        <li>
+                            <span class="separator">/</span>
+                            <span class="current">Tìm kiếm</span>
+                        </li>
+                    {% elif request.path == '/aboutus' %}
+                        <li>
+                            <span class="separator">/</span>
+                            <span class="current">Giới Thiệu</span>
+                        </li>
+                    {% elif request.path.startswith('/posts/') and post %}
+                        <li>
+                            <span class="separator">/</span>
+                            <span class="current">{{ post.title }}</span>
+                        </li>
+                    {% elif request.path.startswith('/admin/') %}
+                        <li>
+                            <span class="separator">/</span>
+                            <span class="current">Admin</span>
+                        </li>
+                    {% else %}
+                        <li>
+                            <span class="separator">/</span>
+                            <span class="current">{{ title|default('') }}</span>
+                        </li>
+                    {% endif %}
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</div>
+
+<style>
+.breadcrumbs {
+    background-color: #ffffff;
+    padding: 12px 0;
+    border-bottom: 1px solid #2a2a2a;
+}
+
+.breadcrumbs-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumbs-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    font-weight:600
+}
+
+.breadcrumbs-list li {
+    display: flex;
+    align-items: center;
+}
+
+.breadcrumbs-list a {
+    color: #080808;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.breadcrumbs-list a:hover {
+    color: #ce3c3c;
+}
+
+.separator {
+    color: #444;
+    margin: 0 10px;
+    font-size: 10px;
+}
+
+.current {
+    color: #000000;
+    font-weight: 400;
+    font-size: 12px;
+}
+
+@media (max-width: 768px) {
+    .breadcrumbs {
+        padding: 10px 0;
+    }
+    
+    .breadcrumbs-list {
+        font-size: 11px;
+    }
+    
+    .separator {
+        margin: 0 8px;
+    }
+}
+</style> 

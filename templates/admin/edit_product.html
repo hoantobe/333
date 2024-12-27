@@ -1,0 +1,584 @@
+{% extends "admin/dashboard.html" %}
+
+{% block head %}
+{{ super() }}
+<!-- Thêm CSS và JS cho Toastr -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Cấu hình Toastr
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+        
+        // Hiển thị flash messages
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    toastr["{{ category }}"]("{{ message }}");
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    });
+</script>
+{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chỉnh sửa sản phẩm</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+
+        form {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 5px rgba(52,152,219,0.3);
+        }
+
+        textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        input[type="file"] {
+            margin-bottom: 20px;
+        }
+
+        button[type="submit"] {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+
+        .current-media {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .current-media img {
+            margin: 5px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .current-media video {
+            margin: 5px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .file-upload {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .file-upload label {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #e9ecef;
+            color: #495057;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .file-upload label:hover {
+            background: #dee2e6;
+        }
+
+        .file-upload input[type="file"] {
+            opacity: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .preview-item {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .preview-item img,
+        .preview-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .remove-preview {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            form {
+                padding: 20px;
+            }
+
+            .preview-container {
+                justify-content: center;
+            }
+        }
+
+        .variants-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .variants-section h3 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+
+        .variant-item {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .variant-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .variant-header h4 {
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        .remove-variant {
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .remove-variant:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .variant-inputs {
+            display: grid;
+            gap: 15px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .variant-image {
+            max-width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .variant-image-placeholder {
+            width: 100px;
+            height: 100px;
+            background-color: #2a2a2a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 2rem;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .variant-image-placeholder span {
+            text-transform: uppercase;
+        }
+
+        .add-variant-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 20px 0;
+            transition: background-color 0.3s;
+        }
+
+        .add-variant-btn:hover {
+            background: #218838;
+        }
+
+        .variant-image-input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chỉnh sửa sản phẩm</h1>
+    <form action="" method="POST" enctype="multipart/form-data">
+        <label for="name">Tên sản phẩm:</label>
+        <input type="text" id="name" name="name" value="{{ product.name }}" required><br>
+
+        <label for="price">Giá:</label>
+        <input type="number" id="price" name="price" value="{{ product.price }}" required><br>
+
+        <label for="description">Mô tả:</label>
+        <textarea id="description" name="description" required>{{ product.description }}</textarea><br>
+
+        <label for="category">Danh mục:</label>
+        <select id="category" name="category" required>
+            {% for category in categories %}
+            <option value="{{ category.id }}" {% if category.id == product.category_id %}selected{% endif %}>{{ category.name }}</option>
+            {% endfor %}
+        </select><br>
+
+        <div class="current-media">
+            <label>Hình ảnh hiện tại:</label>
+            {% if product.image_files %}
+                {% for image in product.image_files %}
+                <img src="{{ url_for('static', filename='uploads/images/products/' + image) }}" alt="{{ product.name }}" width="100">
+                {% endfor %}
+            {% else %}
+                <p>Chưa có hình ảnh</p>
+            {% endif %}
+        </div>
+
+        <div class="file-upload">
+            <label for="image_files">Tải hình ảnh mới (nếu muốn thay thế):</label>
+            <input type="file" id="image_files" name="image_files" multiple accept="image/*">
+        </div>
+
+        <div class="preview-container" id="imagePreview">
+            <!-- Preview images will be added here -->
+        </div>
+
+        <label>Video hiện tại:</label>
+        {% if product.video_files %}
+            {% for video in product.video_files %}
+            <video width="200" controls>
+                <source src="{{ url_for('static', filename='video/' + video) }}" type="video/mp4">
+                Trình duyệt của bạn không hỗ trợ video.
+            </video>
+            {% endfor %}
+        {% else %}
+            <p>Chưa có video</p>
+        {% endif %}<br>
+
+        <label for="video_files">Tải video mới (nếu muốn thay thế):</label>
+        <input type="file" id="video_files" name="video_files" multiple accept="video/*"><br>
+
+        <div class="variants-section">
+            <h3>Biến thể sản phẩm</h3>
+            <div id="variantsContainer">
+                {% if product.variants %}
+                    {% for variant in product.variants %}
+                    <div class="variant-item">
+                        <div class="variant-header">
+                            <h4>Biến thể #{{ loop.index }}</h4>
+                            <button type="button" class="remove-variant" {% if loop.index == 1 %}disabled{% endif %}>
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <input type="hidden" name="variant_ids[]" value="{{ variant.id }}">
+                        <div class="variant-inputs">
+                            <div class="input-group">
+                                <label>Tên biến thể:</label>
+                                <input type="text" name="variant_names[]" value="{{ variant.name }}" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Giá:</label>
+                                <input type="number" name="variant_values[]" value="{{ variant.value }}" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Hình ảnh hiện tại:</label>
+                                {% if variant.image_file %}
+                                <img src="{{ url_for('static', filename='uploads/images/variants/' + variant.image_file) }}" 
+                                     alt="{{ variant.name }}" 
+                                     class="variant-image"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                                <div class="variant-image-placeholder" style="display:none;">
+                                    <span>{{ variant.name[0] }}</span>
+                                </div>
+                                {% else %}
+                                <div class="variant-image-placeholder">
+                                    <span>{{ variant.name[0] }}</span>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div class="input-group">
+                                <label>Thay đổi hình ảnh:</label>
+                                <input type="file" name="variant_images[]" accept="image/*" class="variant-image-input">
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="variant-item">
+                        <div class="variant-header">
+                            <h4>Biến thể #1</h4>
+                        </div>
+                        <input type="hidden" name="variant_ids[]" value="">
+                        <div class="variant-inputs">
+                            <div class="input-group">
+                                <label>Tên biến thể:</label>
+                                <input type="text" name="variant_names[]" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Giá:</label>
+                                <input type="number" name="variant_values[]" required>
+                            </div>
+                            <div class="input-group">
+                                <label>Hình ảnh:</label>
+                                <input type="file" name="variant_images[]" accept="image/*" class="variant-image-input">
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+            <button type="button" id="addVariant" class="add-variant-btn">
+                <i class="fas fa-plus"></i> Thêm biến thể
+            </button>
+        </div>
+
+        <button type="submit">Cập nhật sản phẩm</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('addVariant').addEventListener('click', function() {
+        const container = document.getElementById('variantsContainer');
+        const variantCount = container.children.length + 1;
+        
+        const variantTemplate = `
+            <div class="variant-item">
+                <div class="variant-header">
+                    <h4>Biến thể #${variantCount}</h4>
+                    <button type="button" class="remove-variant">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <input type="hidden" name="variant_ids[]" value="">
+                <div class="variant-inputs">
+                    <div class="input-group">
+                        <label>Tên biến thể:</label>
+                        <input type="text" name="variant_names[]" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Giá:</label>
+                        <input type="number" name="variant_values[]" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Hình ảnh:</label>
+                        <input type="file" name="variant_images[]" accept="image/*" class="variant-image-input">
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        container.insertAdjacentHTML('beforeend', variantTemplate);
+    });
+
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('remove-variant') || 
+            e.target.closest('.remove-variant')) {
+            const variantItem = e.target.closest('.variant-item');
+            if (variantItem) {
+                variantItem.remove();
+                document.querySelectorAll('.variant-item').forEach((item, index) => {
+                    item.querySelector('h4').textContent = `Biến thể #${index + 1}`;
+                });
+            }
+        }
+    });
+
+    document.addEventListener('change', function(e) {
+        if (e.target.classList.contains('variant-image-input')) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                const variantItem = e.target.closest('.variant-item');
+                const inputGroup = e.target.closest('.input-group');
+                
+                reader.onload = function(event) {
+                    // Tìm ảnh preview hiện tại hoặc tạo mới
+                    let previewImg = inputGroup.querySelector('.variant-image');
+                    
+                    if (previewImg) {
+                        // Nếu đã có ảnh preview, cập nhật src
+                        previewImg.src = event.target.result;
+                        previewImg.style.display = 'block';
+                    } else {
+                        // Nếu chưa có, tạo mới element ảnh
+                        previewImg = document.createElement('img');
+                        previewImg.src = event.target.result;
+                        previewImg.classList.add('variant-image');
+                        // Chèn ảnh preview vào trước input file
+                        inputGroup.insertBefore(previewImg, e.target);
+                    }
+                    
+                    // Ẩn placeholder nếu có
+                    const placeholder = inputGroup.querySelector('.variant-image-placeholder');
+                    if (placeholder) {
+                        placeholder.style.display = 'none';
+                    }
+                }
+                
+                reader.readAsDataURL(file);
+            }
+        }
+    });
+
+    // Thêm code xử lý preview cho ảnh sản phẩm chính
+    document.getElementById('image_files').addEventListener('change', function(e) {
+        const previewContainer = document.getElementById('imagePreview');
+        previewContainer.innerHTML = ''; // Xóa preview cũ
+        
+        Array.from(this.files).forEach(file => {
+            if (file) {
+                const reader = new FileReader();
+                
+                reader.onload = function(event) {
+                    const previewItem = document.createElement('div');
+                    previewItem.className = 'preview-item';
+                    
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = 'remove-preview';
+                    removeBtn.innerHTML = '×';
+                    removeBtn.onclick = function() {
+                        previewItem.remove();
+                    };
+                    
+                    previewItem.appendChild(img);
+                    previewItem.appendChild(removeBtn);
+                    previewContainer.appendChild(previewItem);
+                }
+                
+                reader.readAsDataURL(file);
+            }
+        });
+    });
+</script>
+{% endblock %}

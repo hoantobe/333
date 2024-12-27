@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center">Liên hệ với chúng tôi</h2>
+    <p class="text-center">Hãy kết nối qua các kênh bên dưới hoặc gửi tin nhắn trực tiếp cho chúng tôi.</p>
+
+    <!-- Hiển thị thông báo nếu có -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="container mt-4">
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }} text-center" role="alert">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="row">
+        <!-- Facebook & Zalo Links -->
+        <div class="col-md-6 text-center mb-4">
+            <h4>Kết nối qua mạng xã hội</h4>
+            <a href="https://www.facebook.com/profile.php?id=61551896368312&notif_id=1734672143041210&notif_t=page_user_activity&ref=notif" 
+               target="_blank" class="social-link">
+                <i class="fab fa-facebook-square"></i> Facebook
+            </a>
+            <br>
+            <a href="https://zalo.me/0334356427" target="_blank" class="social-link">
+                <i class="fab fa-zalo"></i> Zalo
+            </a>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="col-md-6">
+            <h4>Gửi tin nhắn trực tiếp</h4>
+            <form method="POST">
+                <div class="form-group">
+                    <label for="name">Tên:</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Tin nhắn:</label>
+                    <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Gửi</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+   
+
+    .text-center {
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .social-link {
+        font-size: 20px;
+        color: #1877f2;
+        text-decoration: none;
+        display: inline-block;
+        margin: 10px 0;
+    }
+
+    .social-link i {
+        margin-right: 8px;
+    }
+
+    .social-link:hover {
+        color: #0a58ca;
+    }
+
+    .btn-primary {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+    .btn-primary:hover {
+        background-color: #004080;
+        border-color: #004080;
+    }
+
+    .alert {
+        margin-top: 20px;
+    }
+</style>
+{% endblock %}

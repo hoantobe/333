@@ -1,0 +1,30 @@
+
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="login-form">
+        <h2>Đăng Nhập</h2>
+        <p>Đăng Nhập Với:</p>
+        <div class="social-buttons">
+            <button class="btn btn-social">Facebook</button>
+            <button class="btn btn-social">Google</button>
+        </div>
+        <p>or:</p>
+        <form method="POST" action="{{ url_for('login') }}">
+            <input type="text" name="username" placeholder="Email or tài khoản" required>
+            <input type="password" name="password" placeholder="Mật Khẩu" required>
+            <div class="remember-me">
+                <input type="checkbox" id="remember" name="remember">
+                <label for="remember">Nhớ mật khẩu</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Đăng Nhập</button>
+            <p class="forgot-password"><a href="#">Quên Mật Khẩu?</a></p>
+        </form>
+        <p>Bạn Chưa Có Tài Khoản? <a href="{{ url_for('register') }}">Đăng Ký</a></p>
+    </div>
+</div>
+{% endblock %}

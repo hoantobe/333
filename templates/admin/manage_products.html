@@ -1,0 +1,76 @@
+{% extends "admin/dashboard.html" %}
+
+{% block head %}
+{{ super() }}
+<!-- Thêm CSS và JS cho Toastr -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Cấu hình Toastr
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
+        
+        // Hiển thị flash messages
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    toastr["{{ category }}"]("{{ message }}");
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    });
+</script>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h2>Quản Lý Sản Phẩm</h2>
+    <a href="{{ url_for('add_product') }}" class="btn btn-primary">Thêm Sản Phẩm</a>
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Tên</th>
+                <th>Giá</th>
+                <th>Hành Động</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td style="color: rgb(0, 0, 0);">{{ product.id }}</td>
+                <td style="color: rgb(0, 0, 0);">{{ product.name }}</td>
+                <td style="color: rgb(0, 0, 0);">${{ product.price }}</td>
+                <td>
+                    <a href="{{ url_for('edit_product', id=product.id) }}" class="btn btn-warning">Sửa</a>
+                    <form action="{{ url_for('delete_product', id=product.id) }}" method="POST" style="display: inline; color: aliceblue;">
+                        <button type="submit" class="btn btn-danger">Xóa</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<style>
+    .table{
+        color: rgb(6, 7, 8);
+    }
+</style>
+{% endblock %}
