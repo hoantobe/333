@@ -14,8 +14,8 @@ def create_admin_account():
     # Tạo tài khoản admin
     admin_user = User(
         username='admin',
-        email='admin@example.com',
-        password=generate_password_hash('Hoan00002'),  # Thay đổi mật khẩu nếu cần
+        email='admin@ex.com',
+        password='hoan00002',  # Thay đổi mật khẩu nếu cần
         is_admin=True
     )
     db.session.add(admin_user)

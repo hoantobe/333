@@ -35,30 +35,10 @@ def number_format(value, decimal_places=0, decimal_separator=',', thousands_sepa
 # Thêm bộ lọc vào môi trường Jinja2
 app.jinja_env.filters['number_format'] = number_format
 
-# Tạo thư mục và copy ảnh mặc định
-def setup_default_images():
-    # Tạo các thư mục cần thiết
-    static_dir = Path(app.root_path) / 'static'
-    img_dir = static_dir / 'img'
-    img_dir.mkdir(exist_ok=True)
-    
-    # Đường dẫn đến ảnh mặc định
-    default_variant = img_dir / 'default-variant.jpg'
-    default_product = img_dir / 'default-product.jpg'
-    
-    # Copy ảnh mặc định từ thư mục assets nếu chưa tồn tại
-    if not default_variant.exists():
-        source = Path(app.root_path) / 'static' / 'assets' / 'default-variant.jpg'
-        if source.exists():
-            shutil.copy(source, default_variant)
-    
-    if not default_product.exists():
-        source = Path(app.root_path) / 'static' / 'assets' / 'default-product.jpg'
-        if source.exists():
-            shutil.copy(source, default_product)
+
 
 # Gọi hàm khi khởi động app
-setup_default_images()
+
 
 @app.route('/')
 @app.route('/home')
@@ -83,56 +63,61 @@ def home():
 
 @app.route('/product/<int:product_id>')
 def product(product_id):
-
-        print(f"Accessing product route with ID: {product_id}")
+    print(f"Accessing product route with ID: {product_id}")
+    
+    # Lấy thông tin sản phẩm
+    product = Product.query.get_or_404(product_id)
+    if not product:
+        print("Product not found")
+        flash('Không tìm thấy sản phẩm', 'error')
+        return redirect(url_for('home'))
         
-        # Lấy thông tin sản phẩm
-        product = Product.query.get_or_404(product_id)
-        if not product:
-            print("Product not found")
-            flash('Không tìm thấy sản phẩm', 'error')
-            return redirect(url_for('home'))
-            
-        print(f"Found product: {product.name}")
-        
-        # Kiểm tra và chuẩn bị ảnh sản phẩm
-        if not product.image_files:
-            product.image_files = ['default-product.jpg']
-            print("Using default product image")
-        
-        # Lấy các biến thể của sản phẩm
-        variants = Variant.query.filter_by(product_id=product.id).all()
-        print(f"Found {len(variants)} variants")
-        
-        # Chuẩn bị dữ liệu biến thể
-        for variant in variants:
-            if not variant.image_file:
-                variant.image_file = 'default-variant.jpg'
-            print(f"Variant {variant.name} with image: {variant.image_file}")
-        
-        # Lấy sản phẩm liên quan
-        related_products = Product.query.filter(
-            Product.category_id == product.category_id,
-            Product.id != product.id
-        ).limit(4).all()
-        
-        print("Preparing to render product.html template")
-        data = {
+    print(f"Found product: {product.name}")
+    
+    # Kiểm tra và chuẩn bị ảnh sản phẩm
+    if not product.image_files:
+        product.image_files = ['default-product.jpg']
+        print("Using default product image")
+    
+    # Lấy các biến thể của sản phẩm
+    variants = Variant.query.filter_by(product_id=product.id).all()
+    print(f"Found {len(variants)} variants")
+    
+    # Chuẩn bị dữ liệu biến thể
+    for variant in variants:
+        if not variant.image_file:
+            variant.image_file = 'default-variant.jpg'
+        print(f"Variant {variant.name} with image: {variant.image_file}")
+    
+    # Lấy sản phẩm liên quan
+    related_products = Product.query.filter(
+        Product.category_id == product.category_id,
+        Product.id != product.id
+    ).limit(4).all()
+    
+    print("Preparing to render product.html template")
+    data = {
         'shop_url': url_for('products'),  # URL cho nút "Tiếp tục mua sắm"
         'cart_url': url_for('cart')      # URL cho nút "Đi tới giỏ hàng"
     }
-        # Kiểm tra template tồn tại
-        try:
-            return render_template('product.html',
-                                 product=product,
-                                 variants=variants,
-                                 related_products=related_products,
-                                 data=data )
-        except Exception as template_error:
-            print(f"Template error: {str(template_error)}")
-            raise
+    # Kiểm tra template tồn tại
+    try:
+        return render_template('product.html',
+                             product=product,
+                             variants=variants,
+                             related_products=related_products,
+                             product_id=product_id,
+                             data=data )
+    except Exception as template_error:
+        print(f"Template error: {str(template_error)}")
+        raise
                              
-
+@app.route('/cart')
+@login_required
+def cart():
+    cart_items = session.get('cart', [])
+    total_price = sum(item['price'] * item['quantity'] for item in cart_items if 'price' in item)
+    return render_template('cart.html', cart_items=cart_items, total_price=total_price)
 
 @app.route('/products')
 def products():
@@ -151,9 +136,9 @@ def products():
     
     # Sắp xếp
     if sort == 'price-asc':
-        query = query.order_by(Product.price.asc())
+        query = query.order_by(Product.discounted_price.asc() if Product.discounted_price else Product.original_price.asc())
     elif sort == 'price-desc':
-        query = query.order_by(Product.price.desc())
+        query = query.order_by(Product.discounted_price.desc() if Product.discounted_price else Product.original_price.desc())
     else:  # newest
         query = query.order_by(Product.id.desc())
     
@@ -171,87 +156,40 @@ def products():
                          categories=categories,
                          selected_category=category_name)
 
-@app.route('/cart')
-@login_required
-def cart():
-    if 'cart' not in session:
-        session['cart'] = []
-    
-    cart_items = []
-    total_price = 0
-    
-    try:
-        for item in session['cart']:
-            product = Product.query.get(item['product_id'])
-            variant = Variant.query.get(item['variant_id'])
-            if product and variant:
-                # Đảm bảo các giá trị số được chuyển đổi đúng kiểu
-                quantity = int(item['quantity'])
-                price = float(variant.value)
-                item_total = price * quantity
-                
-                cart_item = {
-                    'id': item['product_id'],
-                    'name': product.name,
-                    'variant_name': variant.name,
-                    'price': price,
-                    'quantity': quantity,
-                    'total': item_total,
-                    'image': variant.image_file if variant.image_file else 'default-variant.jpg',  # Lấy hình ảnh của biến thể
-                    'product_id': product.id,
-                    'variant_id': variant.id
-                }
-                cart_items.append(cart_item)
-                total_price += item_total
-
-        return render_template('cart.html', cart_items=cart_items, total_price=total_price)
-        
-    except Exception as e:
-        print(f"Error in cart route: {str(e)}")  # Debug log
-        flash('Có lỗi xảy ra khi hiển thị giỏ hàng!', 'danger')
-        session['cart'] = []  # Reset giỏ hàng nếu có lỗi
-        return redirect(url_for('products'))
-
 @app.route('/add_to_cart/<int:product_id>', methods=['POST'])
 @login_required
 def add_to_cart(product_id):
     try:
-        # Lấy ID biến thể và số lượng từ form
-        variant_id = request.form.get('variant')  
-        quantity = int(request.form.get('quantity', 1))
-        
+        data = request.get_json()
+        variant_id = data.get('variant')
+        quantity = data.get('quantity')
+
         if not variant_id:
-            print("Không có biến thể được chọn")
-            return jsonify({
-                'success': False,
-                'message': 'Vui lòng chọn Mẫu!'
-            })
-        
-        # Kiểm tra số lượng
-        if quantity <= 0:
-            return jsonify({
-                'success': False,
-                'message': 'Số lượng phải lớn hơn 0!'
-            })
+            return jsonify({'success': False, 'message': 'Không có biến thể được chọn'})
+
+        if not quantity or not isinstance(quantity, int) or quantity <= 0:
+            return jsonify({'success': False, 'message': 'Số lượng không hợp lệ'})
+
+        quantity = int(quantity)
 
         # Khởi tạo giỏ hàng nếu chưa có
         if 'cart' not in session:
             session['cart'] = []
-        
+
         # Lấy thông tin sản phẩm và biến thể
         product = Product.query.get_or_404(product_id)
         variant = Variant.query.get_or_404(variant_id)
-        
+
         # Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
         cart = session['cart']
         item_found = False
-        
+
         for item in cart:
             if item.get('product_id') == product_id and item.get('variant_id') == int(variant_id):
                 item['quantity'] += quantity  # Cập nhật số lượng
                 item_found = True
                 break
-        
+
         if not item_found:
             cart.append({
                 'product_id': product_id,
@@ -259,31 +197,18 @@ def add_to_cart(product_id):
                 'quantity': quantity,
                 'product_name': product.name,
                 'variant_name': variant.name,
-                'price': variant.value
+                'price': variant.value,
+                'image': variant.image_file if variant.image_file else 'default-variant.jpg'
             })
-        
+
         session['cart'] = cart
         session.modified = True
-            
-        return jsonify({
-            'success': True,
-            'message': 'Đã thêm vào giỏ hàng thành công!',
-            'cart_count': len(session.get('cart', [])),
-            'shop_url': url_for('products'),  # URL đến trang cửa hàng
-            'cart_url': url_for('cart')   # URL đến giỏ hàng
-        })
-        
-    except ValueError:
-        return jsonify({
-            'success': False,
-            'message': 'Số lượng không hợp lệ!'
-        })
+
+        return jsonify({'success': True, 'message': 'Đã thêm vào giỏ hàng thành công!'})
+
     except Exception as e:
         print(f"Error in add_to_cart: {str(e)}")  # Log lỗi để debug
-        return jsonify({
-            'success': False,
-            'message': 'Có lỗi xảy ra khi thêm vào giỏ hàng'
-        })
+        return jsonify({'success': False, 'message': 'Có lỗi xảy ra khi thêm vào giỏ hàng'})
 
 
 @app.route('/remove_from_cart/<int:product_id>/<int:variant_id>', methods=['POST'])
@@ -298,23 +223,27 @@ def remove_from_cart(product_id, variant_id):
 
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        remember = 'remember' in request.form  # Kiểm tra nếu người dùng chọn "Nhớ mật khẩu"
+
         user = User.query.filter_by(username=username).first()
-        if user and check_password_hash(user.password, password):
-            login_user(user)
-            return redirect(url_for('home'))
+        if user and password:
+            login_user(user, remember=remember)
+            flash('Đăng nhập thành công!', 'success')
+            return jsonify({'success': True, 'redirect_url': url_for('home')})
         else:
-            flash('Login Unsuccessful. Please check username and password', 'danger')
-            return redirect(url_for('register'))
-    return render_template('login.html')
+            return jsonify({'success': False, 'message': 'Sai tài khoản hoặc mật khẩu!'})
+    return jsonify({'success': False, 'message': 'Yêu cầu không hợp lệ!'})
 
 @app.route('/logout')
 def logout():
     logout_user()
+    session.pop('user', None)
+    flash('Bạn đã đăng xuất thành công!', 'success')
     return redirect(url_for('home'))
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -358,72 +287,62 @@ def manage_products():
 def add_product():
     if request.method == 'POST':
         try:
-            # Lấy thông tin sản phẩm cơ bản
+            # Lấy thông tin cơ bản của sản phẩm
             name = request.form.get('name')
             category_id = request.form.get('category')
-            price = request.form.get('price')
+            original_price = request.form.get('original_price')
+            discounted_price = request.form.get('discounted_price') or None
             description = request.form.get('description')
-            
+
             # Xử lý danh mục mới nếu có
             new_category_name = request.form.get('new_category')
             if new_category_name:
-                category = Category(name=new_category_name)
-                db.session.add(category)
-                db.session.commit()
-                category_id = category.id
+                new_category = Category(name=new_category_name)
+                db.session.add(new_category)
+                db.session.flush()  # Để lấy ID của danh mục mới
+                category_id = new_category.id
 
-            # Xử lý upload ảnh sản phẩm
-            image_filenames = []
+            # Xử lý upload hình ảnh sản phẩm
+            image_urls = []
             if 'image_files' in request.files:
-                files = request.files.getlist('image_files')
-                for file in files:
-                    if file and allowed_file(file.filename):
-                        filename = save_image(file, 'products')
-                        if filename:
-                            image_filenames.append(filename)
+                for file in request.files.getlist('image_files'):
+                    image_url = save_image(file, 'products')  # Hàm lưu ảnh
+                    if image_url:
+                        image_urls.append(image_url)
 
             # Tạo sản phẩm mới
             new_product = Product(
                 name=name,
-                price=float(price),
+                original_price=float(original_price),
+                discounted_price=float(discounted_price) if discounted_price else None,
                 description=description,
                 category_id=int(category_id),
-                image_files=image_filenames  # Bây giờ đã có danh sách ảnh
+                image_files=image_urls
             )
             db.session.add(new_product)
-            db.session.flush()  # Để lấy product id
+            db.session.flush()  # Để lấy `id` của sản phẩm mới
 
             # Xử lý biến thể
             variant_names = request.form.getlist('variant_name[]')
-            variant_values = request.form.getlist('variant_value[]')
+            variant_prices = request.form.getlist('variant_price[]')
             variant_images = request.files.getlist('variant_image[]')
 
-            print("Số lượng biến thể:", len(variant_names))
-            print("Số lượng ảnh biến thể:", len(variant_images))
+            for i, variant_name in enumerate(variant_names):
+                # Kiểm tra xem có giá trị tương ứng hay không
+                variant_price = variant_prices[i] if i < len(variant_prices) else None
+                variant_image = variant_images[i] if i < len(variant_images) else None
 
-            for name, value, image in zip(variant_names, variant_values, variant_images):
-                if name and value:  # Chỉ tạo biến thể nếu có tên và giá
-                    try:
-                        variant = Variant(
-                            name=name,
-                            value=float(value),
-                            product_id=new_product.id
-                        )
-                        
-                        # Xử lý ảnh biến thể
-                        if image and image.filename:  # Kiểm tra có file được upload không
-                            print(f"Xử lý ảnh biến thể: {image.filename}")
-                            if allowed_file(image.filename):
-                                filename = save_image(image, 'variants')
-                                if filename:
-                                    variant.image_file = filename  # Chỉ lưu tên file
-                                    print(f"Đã lưu ảnh biến thể: {filename}")
-                        
-                        db.session.add(variant)
-                        print(f"Đã thêm biến thể: {name} với ảnh: {variant.image_file}")
-                    except Exception as e:
-                        print(f"Lỗi khi thêm biến thể {name}: {str(e)}")
-                        raise
+                # Upload ảnh biến thể nếu có
+                variant_image_url = save_image(variant_image, 'variants') if variant_image else None
+
+                # Thêm biến thể mới
+                new_variant = Variant(
+                    name=variant_name,
+                    value=float(variant_price),
+                    image_file=variant_image_url,
+                    product_id=new_product.id
+                )
+                db.session.add(new_variant)
 
             db.session.commit()
             flash('Sản phẩm đã được thêm thành công!', 'success')
@@ -431,7 +350,6 @@ def add_product():
 
         except Exception as e:
             db.session.rollback()
-            print(f"Lỗi khi thêm sản phẩm: {str(e)}")
             flash(f'Có lỗi xảy ra: {str(e)}', 'danger')
             return redirect(url_for('add_product'))
 
@@ -439,16 +357,12 @@ def add_product():
     categories = Category.query.all()
     return render_template('admin/add_product.html', categories=categories)
 
+
 @app.route('/admin/edit_product/<int:id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def edit_product(id):
     product = Product.query.get_or_404(id)
-    
-    # Kiểm tra và sửa đường dẫn ảnh cho các biến thể
-    for variant in product.variants:
-        if variant.image_file:
-            variant.image_file = verify_image_path(variant.image_file, 'variants')
     
     if request.method == 'POST':
         try:
@@ -458,17 +372,17 @@ def edit_product(id):
             product.description = request.form.get('description')
             product.category_id = int(request.form.get('category'))
 
-            # Xử lý ảnh sản phẩm mới
+            # Xử lý ảnh sản phẩm mới (upload lên Cloudinary)
             if 'image_files' in request.files:
                 new_images = request.files.getlist('image_files')
                 for image in new_images:
                     if image and allowed_file(image.filename):
-                        filename = save_image(image, 'products')
-                        if filename:
+                        upload_result = cloudinary.uploader.upload(image)  # Tải ảnh lên Cloudinary
+                        if upload_result:
                             if not product.image_files:
                                 product.image_files = []
-                            product.image_files.append(filename)
-                            print(f"Đã thêm ảnh mới: {filename}")
+                            product.image_files.append(upload_result['public_id'])
+                            print(f"Đã thêm ảnh mới từ Cloudinary: {upload_result['public_id']}")
 
             # Xử lý biến thể
             variant_ids = request.form.getlist('variant_ids[]')
@@ -492,12 +406,12 @@ def edit_product(id):
                         variant.name = name
                         variant.value = float(value)
                         
-                        # Cập nhật ảnh nếu có
+                        # Cập nhật ảnh nếu có (upload lên Cloudinary)
                         if image and image.filename:
-                            filename = save_image(image, 'variants')
-                            if filename:
-                                variant.image_file = filename
-                                print(f"Đã cập nhật ảnh biến thể: {filename}")
+                            upload_result = cloudinary.uploader.upload(image)  # Tải ảnh lên Cloudinary
+                            if upload_result:
+                                variant.image_file = upload_result['public_id']
+                                print(f"Đã cập nhật ảnh biến thể từ Cloudinary: {upload_result['public_id']}")
                     else:
                         # Thêm biến thể mới
                         variant = Variant(
@@ -506,10 +420,10 @@ def edit_product(id):
                             product_id=product.id
                         )
                         if image and image.filename:
-                            filename = save_image(image, 'variants')
-                            if filename:
-                                variant.image_file = filename
-                                print(f"Đã thêm ảnh cho biến thể mới: {filename}")
+                            upload_result = cloudinary.uploader.upload(image)  # Tải ảnh lên Cloudinary
+                            if upload_result:
+                                variant.image_file = upload_result['public_id']
+                                print(f"Đã thêm ảnh cho biến thể mới từ Cloudinary: {upload_result['public_id']}")
                         db.session.add(variant)
                         print(f"Đã thêm biến thể mới: {name}")
 
@@ -519,18 +433,18 @@ def edit_product(id):
 
         except Exception as e:
             db.session.rollback()
-            print(f"Lỗi khi cập nhật sản phẩm: {str(e)}")
             flash(f'Có lỗi xảy ra: {str(e)}', 'danger')
             return redirect(url_for('edit_product', id=id))
 
     # GET request
     categories = Category.query.all()
-    # Đảm bảo đường dẫn ảnh đúng với cấu trúc thư mục
-    image_path = 'uploads/images/products/'  # Thay đổi đường dẫn này
+    # Hiển thị ảnh cũ từ Cloudinary
+    image_urls = product.image_files  # Các URL ảnh từ Cloudinary
     return render_template('admin/edit_product.html', 
                          product=product,
                          categories=categories,
-                         image_path=image_path)
+                         image_urls=image_urls)
+
 
 @app.route('/admin/delete_product/<int:id>', methods=['POST'])
 @login_required
@@ -543,15 +457,14 @@ def delete_product(id):
         # Xóa các biến thể trước
         Variant.query.filter_by(product_id=id).delete()
         
-        # Xóa các file ảnh
+        # Xóa các file ảnh từ Cloudinary
         if product.image_files:
             for image in product.image_files:
                 try:
-                    image_path = os.path.join(app.root_path, 'static/uploads/img', image)
-                    if os.path.exists(image_path):
-                        os.remove(image_path)
+                    cloudinary.uploader.destroy(image)
+                    print(f"Đã xóa file ảnh từ Cloudinary: {image}")
                 except Exception as e:
-                    print(f"Error deleting image {image}: {str(e)}")
+                    print(f"Lỗi khi xóa file ảnh từ Cloudinary: {str(e)}")
         
         # Xóa sản phẩm
         db.session.delete(product)
@@ -564,7 +477,7 @@ def delete_product(id):
          })
     except Exception as e:
         db.session.rollback()
-        print(f"Error deleting product: {str(e)}")
+        print(f"Lỗi khi xóa sản phẩm: {str(e)}")
         return jsonify({
             'success': False,
             'error': str(e)
@@ -588,49 +501,45 @@ def new_post():
     if request.method == 'POST':
         try:
             title = request.form['title']
-            # Lấy nội dung HTML từ CKEditor
-            content = request.form['content']
+            content = request.form['content']  # Lấy nội dung HTML từ CKEditor
             
-            # Xử lý file ảnh
-            image_filename = None
+            # Xử lý ảnh
+            image_url = None
             if 'image_file' in request.files:
                 image_file = request.files['image_file']
-                if image_file and image_file.filename:
-                    image_filename = secure_filename(image_file.filename)
-                    # Cập nhật đường dẫn lưu ảnh
-                    image_path = os.path.join(app.root_path, 'static/uploads/images/posts')
-                    os.makedirs(image_path, exist_ok=True)
-                    image_file.save(os.path.join(image_path, image_filename))
-
-            # Xử lý file video (nếu cần)
-            video_filename = None
+                if image_file and allowed_file(image_file.filename):
+                    # Tải ảnh lên Cloudinary
+                    upload_result = cloudinary.uploader.upload(image_file, folder='posts')
+                    image_url = upload_result.get('secure_url')
+            
+            # Xử lý video
+            video_url = None
             if 'video_file' in request.files:
                 video_file = request.files['video_file']
-                if video_file and video_file.filename:
-                    video_filename = secure_filename(video_file.filename)
-                    video_path = os.path.join(app.root_path, 'static/uploads/video')
-                    os.makedirs(video_path, exist_ok=True)
-                    video_file.save(os.path.join(video_path, video_filename))
-
-            # Tạo bài viết mới với nội dung HTML
+                if video_file and allowed_file(video_file.filename):
+                    # Tải video lên Cloudinary
+                    upload_result = cloudinary.uploader.upload(video_file, folder='videos', resource_type='video')
+                    video_url = upload_result.get('secure_url')
+            
+            # Tạo bài viết mới
             post = Post(
                 title=title,
-                content=content,  # Lưu trực tiếp HTML
+                content=content,  # Lưu nội dung HTML
                 user_id=current_user.id,
-                image_file=image_filename,
-                video_file=video_filename
+                image_url=image_url,
+                video_url=video_url
             )
             
             db.session.add(post)
             db.session.commit()
             flash('Bài viết đã được tạo thành công!', 'success')
-            return redirect(url_for('blog'))
-            
+            return redirect(url_for('posts'))
+        
         except Exception as e:
             db.session.rollback()
             flash(f'Có lỗi xảy ra: {str(e)}', 'danger')
             return redirect(url_for('new_post'))
-            
+    
     return render_template('admin/add_post.html')
 
 
@@ -651,35 +560,25 @@ def update_post(post_id):
             if 'image_file' in request.files:
                 image_file = request.files['image_file']
                 if image_file and image_file.filename:
-                    # Xóa ảnh cũ nếu có
+                    # Xóa ảnh cũ từ Cloudinary nếu có
                     if post.image_file:
-                        old_image_path = os.path.join(app.root_path, 'static/img', post.image_file)
-                        if os.path.exists(old_image_path):
-                            os.remove(old_image_path)
-                            
-                    # Lưu ảnh mới
-                    image_filename = secure_filename(image_file.filename)
-                    image_path = os.path.join(app.root_path, 'static/img')
-                    os.makedirs(image_path, exist_ok=True)
-                    image_file.save(os.path.join(image_path, image_filename))
-                    post.image_file = image_filename
+                        cloudinary.uploader.destroy(post.image_file)
+
+                    # Tải ảnh mới lên Cloudinary
+                    upload_result = cloudinary.uploader.upload(image_file)
+                    post.image_file = upload_result['public_id']
 
             # Xử lý file video mới
             if 'video_file' in request.files:
                 video_file = request.files['video_file']
                 if video_file and video_file.filename:
-                    # Xóa video cũ nếu có
+                    # Xóa video cũ từ Cloudinary nếu có
                     if post.video_file:
-                        old_video_path = os.path.join(app.root_path, 'static/video', post.video_file)
-                        if os.path.exists(old_video_path):
-                            os.remove(old_video_path)
-                            
-                    # Lưu video mới
-                    video_filename = secure_filename(video_file.filename)
-                    video_path = os.path.join(app.root_path, 'static/video')
-                    os.makedirs(video_path, exist_ok=True)
-                    video_file.save(os.path.join(video_path, video_filename))
-                    post.video_file = video_filename
+                        cloudinary.uploader.destroy(post.video_file, resource_type='video')
+
+                    # Tải video mới lên Cloudinary
+                    upload_result = cloudinary.uploader.upload(video_file, resource_type='video')
+                    post.video_file = upload_result['public_id']
 
             db.session.commit()
             flash('Bài viết đã được cập nhật thành công!', 'success')
@@ -690,6 +589,7 @@ def update_post(post_id):
             flash(f'Có lỗi xảy ra: {str(e)}', 'danger')
             
     return render_template('admin/add_post.html', title='Cập nhật bài viết', post=post)
+
 
 @app.route('/admin/post/<int:post_id>/delete', methods=['GET', 'POST'])
 @login_required
@@ -703,17 +603,21 @@ def delete_post(post_id):
         post = Post.query.get_or_404(post_id)
         print(f"Đã tìm thấy bài viết: {post.title}")
         
-        # Xóa file ảnh nếu có
+        # Xóa file ảnh từ Cloudinary nếu có
         if post.image_file:
             try:
-                image_path = os.path.join(app.config['UPLOAD_FOLDER'], post.image_file)
-                print(f"Đường dẫn ảnh: {image_path}")
-                if os.path.exists(image_path):
-                    os.remove(image_path)
-                    print("Đã xóa file ảnh")
+                cloudinary.uploader.destroy(post.image_file)
+                print("Đã xóa file ảnh từ Cloudinary")
             except Exception as e:
-                print(f"Lỗi khi xóa file ảnh: {str(e)}")
-                # Tiếp tục xóa bài viết ngay cả khi không xóa được ảnh
+                print(f"Lỗi khi xóa file ảnh từ Cloudinary: {str(e)}")
+        
+        # Xóa file video từ Cloudinary nếu có
+        if post.video_file:
+            try:
+                cloudinary.uploader.destroy(post.video_file, resource_type='video')
+                print("Đã xóa file video từ Cloudinary")
+            except Exception as e:
+                print(f"Lỗi khi xóa file video từ Cloudinary: {str(e)}")
         
         # Lưu thông tin bài viết trước khi xóa
         title = post.title
@@ -730,8 +634,6 @@ def delete_post(post_id):
         print(f"Lỗi SQLAlchemy: {str(e)}")
         flash('Có lỗi xảy ra khi xóa bài viết trong database!', 'danger')
         
-
-    
     finally:
         # Luôn redirect về trang quản lý
         return redirect(url_for('manage_posts'))
@@ -963,11 +865,11 @@ def admin_dashboard():
         # Thống kê doanh thu theo tháng
         current_year = datetime.utcnow().year
         monthly_revenue = db.session.query(
-            func.strftime('%m', Order.created_at).label('month'),
+            func.month(Order.created_at).label('month'),
             func.sum(Order.total_price).label('revenue')
         ).filter(
             Order.status == 'completed',
-            func.strftime('%Y', Order.created_at) == str(current_year)
+            func.year(Order.created_at) == current_year
         ).group_by('month').all()
         
         # Đảm bảo dữ liệu không None trước khi chuyển thành JSON
@@ -1194,13 +1096,7 @@ def blog(page=1):
                          page=page,
                          pages=posts.pages)
 
-# Định nghĩa các đường dẫn upload
-IMAGE_UPLOADS = os.path.join(app.root_path, 'static', 'uploads', 'images')
-UPLOAD_FOLDERS = {
-    'products': os.path.join(app.root_path, 'static', 'uploads', 'images', 'products'),
-    'variants': os.path.join(app.root_path, 'static', 'uploads', 'images', 'variants'),
-    'posts': os.path.join(app.root_path, 'static', 'uploads', 'images', 'posts')
-}
+
 
 def create_upload_folders():
     """Tạo các thư mục upload nếu chưa tồn tại"""
@@ -1227,57 +1123,30 @@ def create_upload_folders():
             
     except Exception as e:
         print(f"Lỗi khi tạo thư mục: {str(e)}")
+import cloudinary
+import cloudinary.uploader
 
-def save_image(file, subfolder):
+cloudinary.config(
+    cloud_name='dwkkugzxr',
+    api_key='668853365344795',
+    api_secret='M7NtkNjdkMrLHAxKh2IeyrRMfxQ'
+)
+
+def save_image(file, folder):
     try:
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            name, ext = os.path.splitext(filename)
-            filename = f"{name}_{int(time.time())}{ext}"
-            
-            # Đường dẫn thư mục upload
-            upload_folder = os.path.join(
-                app.root_path,
-                'static',
-                'uploads',
-                'images',
-                subfolder
-            )
-            
-            # Tạo thư mục nếu chưa tồn tại
-            os.makedirs(upload_folder, exist_ok=True)
-            
-            file_path = os.path.join(upload_folder, filename)
-            file.save(file_path)
-            
-            print(f"Đã lưu file tại: {file_path}")
-            return filename
-            
+            # Upload file lên Cloudinary
+            upload_result = cloudinary.uploader.upload(file, folder=folder)
+            return upload_result['secure_url']  # Trả về URL của ảnh trên Cloudinary
     except Exception as e:
-        print(f"Lỗi khi lưu file: {str(e)}")
+        print(f"Lỗi khi upload lên Cloudinary: {str(e)}")
         return None
-
-# Thêm hàm kiểm tra và tạo thư mục
-def ensure_upload_folders():
-    """Đảm bảo các thư mục upload tồn tại"""
-    base_path = os.path.join(app.root_path, 'static', 'uploads', 'images')
-    folders = ['products', 'variants', 'posts']
-    
-    for folder in folders:
-        folder_path = os.path.join(base_path, folder)
-        if not os.path.exists(folder_path):
-            os.makedirs(folder_path)
-            print(f"Đã tạo thư mục: {folder_path}")
-
-# Gọi hàm khi khởi động app
-_upload_folders_created = False
-
-@app.before_request
-def setup_folders():
-    global _upload_folders_created
-    if not _upload_folders_created:
-        ensure_upload_folders()
-        _upload_folders_created = True
+from cloudinary.utils import cloudinary_url
+@app.context_processor
+def utility_processor():
+    def get_cloudinary_url(public_id):
+        return cloudinary_url(public_id)[0]
+    return dict(cloudinary_url=get_cloudinary_url)
 
 # Cập nhật route upload ảnh sản phẩm
 @app.route('/admin/product/upload-image', methods=['POST'])
@@ -1286,11 +1155,11 @@ def setup_folders():
 def upload_product_image():
     try:
         file = request.files.get('image')
-        image_path = save_image(file, 'products')
-        if image_path:
+        image_url = save_image(file, 'products')  # Sử dụng hàm save_image đã sửa
+        if image_url:  # Lấy URL từ Cloudinary
             return jsonify({
                 'success': True,
-                'url': url_for('static', filename=image_path)
+                'url': image_url  # Trả về URL trực tiếp từ Cloudinary
             })
         return jsonify({
             'success': False,
@@ -1301,35 +1170,40 @@ def upload_product_image():
             'success': False,
             'message': str(e)
         })
+UPLOAD_FOLDERS = {
+    'products': os.path.join(app.root_path, 'static', 'uploads', 'images', 'products'),
+    'variants': os.path.join(app.root_path, 'static', 'uploads', 'images', 'variants'),
+    'categories': os.path.join(app.root_path, 'static', 'uploads', 'images', 'categories')
+}
 
-# Cập nhật route upload ảnh bài viết
 @app.route('/admin/post/upload-image', methods=['POST'])
 @login_required
 @admin_required
 def upload_post_image():
     try:
-        # Xử lý upload từ URL
+        # Xử lý upload từ URL và tải lên Cloudinary
         image_url = request.form.get('url')
         if image_url:
-            filename = download_image_from_url(image_url, UPLOAD_FOLDERS['posts'])
-            if filename:
-                image_path = os.path.join('uploads', 'images', 'posts', filename)
+            # Tải ảnh từ URL và upload trực tiếp lên Cloudinary
+            image_url = upload_image_to_cloudinary(image_url)  # Truyền URL trực tiếp cho Cloudinary
+            if image_url:
                 return jsonify({
                     'uploaded': 1,
-                    'url': url_for('static', filename=image_path),
-                    'fileName': filename
+                    'url': image_url,  # URL từ Cloudinary
+                    'fileName': image_url.split('/')[-1]  # Lấy tên file từ URL
                 })
 
-        # Xử lý upload file
+        # Xử lý upload file và tải lên Cloudinary
         file = request.files.get('upload')
-        image_path = save_image(file, 'posts')
-        if image_path:
-            return jsonify({
-                'uploaded': 1,
-                'url': url_for('static', filename=f'uploads/images/posts/{image_path}'),
-                'fileName': os.path.basename(image_path)
-            })
-
+        if file and allowed_file(file.filename):
+            image_url = upload_image_to_cloudinary(file)  # Tải ảnh lên Cloudinary
+            if image_url:
+                return jsonify({
+                    'uploaded': 1,
+                    'url': image_url,  # URL từ Cloudinary
+                    'fileName': file.filename
+                })
+        
         return jsonify({
             'uploaded': 0,
             'error': {'message': 'Không thể upload ảnh'}
@@ -1341,6 +1215,16 @@ def upload_post_image():
             'error': {'message': str(e)}
         })
 
+
+def upload_image_to_cloudinary(file):
+    try:
+        # Nếu file là ảnh tải lên Cloudinary
+        upload_result = cloudinary.uploader.upload(file)
+        return upload_result['secure_url']  # Lấy URL ảnh đã upload lên Cloudinary
+    except Exception as e:
+        print(f"Lỗi khi tải ảnh lên Cloudinary: {str(e)}")
+        return None
+
 # Cập nhật route upload ảnh biến thể
 @app.route('/admin/variant/upload-image', methods=['POST'])
 @login_required
@@ -1348,11 +1232,11 @@ def upload_post_image():
 def upload_variant_image():
     try:
         file = request.files.get('image')
-        image_path = save_image(file, 'variants')
-        if image_path:
+        image_url = save_image(file, 'variants')  # Upload lên Cloudinary và lấy URL
+        if image_url:
             return jsonify({
                 'success': True,
-                'url': url_for('static', filename=image_path)
+                'url': image_url  # Trả về URL trực tiếp từ Cloudinary
             })
         return jsonify({
             'success': False,
@@ -1363,21 +1247,17 @@ def upload_variant_image():
             'success': False,
             'message': str(e)
         })
-
-def delete_image(image_path):
+def delete_image(public_id):
     """
     Hàm chung để xóa file ảnh
     - image_path: đường dẫn tương đối của file trong thư mục static
     """
     try:
-        if image_path:
-            full_path = os.path.join(app.root_path, 'static', image_path)
-            if os.path.exists(full_path):
-                os.remove(full_path)
-                return True
+        result = cloudinary.uploader.destroy(public_id)
+        return result['result'] == 'ok'
     except Exception as e:
-        print(f"Lỗi khi xóa ảnh: {str(e)}")
-    return False
+        print(f"Lỗi khi xóa ảnh trên Cloudinary: {str(e)}")
+        return False
 
 @app.route('/chinh-sach')
 def policies():
@@ -1444,24 +1324,7 @@ def download_image_from_url(url, upload_folder):
         print(f"Lỗi khi tải ảnh từ URL: {str(e)}")
         return None
 
-def verify_image_path(image_name, subfolder):
-    """Kiểm tra và trả về đường dẫn ảnh hợp lệ"""
-    if not image_name:
-        return None
-        
-    # Kiểm tra các vị trí có thể có ảnh
-    possible_paths = [
-        os.path.join(app.root_path, 'static', 'uploads', 'images', subfolder, image_name),
-        os.path.join(app.root_path, 'static', 'uploads', 'img', image_name),
-        os.path.join(app.root_path, 'static', 'img', image_name)
-    ]
-    
-    for path in possible_paths:
-        if os.path.exists(path):
-            # Trả về đường dẫn tương đối từ thư mục static
-            return os.path.join('uploads', 'images', subfolder, image_name)
-            
-    return 'img/default-variant.jpg'  # Trả về ảnh mặc định nếu không tìm thấy
+
 
 
 
@@ -1552,3 +1415,31 @@ def edit_post(post_id):
         return redirect(url_for('view_post', slug=post.slug))
 
     return render_template('admin/edit_post.html', post=post)
+
+@app.route('/buy_now/<int:product_id>', methods=['POST'])
+@login_required
+def buy_now(product_id):
+    try:
+        data = request.get_json()
+        variant_id = data.get('variant')
+        quantity = data.get('quantity')
+
+        if not variant_id:
+            return jsonify({'success': False, 'message': 'Vui lòng chọn biến thể!'})
+
+        if not quantity or not isinstance(quantity, int) or quantity <= 0:
+            return jsonify({'success': False, 'message': 'Số lượng không hợp lệ!'})
+
+        # Cập nhật giỏ hàng
+        session['cart'] = [{
+            'product_id': product_id,
+            'variant_id': int(variant_id),
+            'quantity': quantity,
+        }]
+        session.modified = True
+
+        return jsonify({'success': True, 'redirect_url': url_for('checkout')})
+
+    except Exception as e:
+        print(f"Lỗi mua ngay: {e}")
+        return jsonify({'success': False, 'message': 'Có lỗi xảy ra!'})

@@ -39,7 +39,7 @@
             <div class="product-card">
                 <div class="product-image">
                     {% if product.image_files %}
-                    <img src="{{ url_for('static', filename='uploads/images/products/' + product.image_files[0]) }}" 
+                    <img src="{{ cloudinary_url(product.image_files[0]) }}" 
                          alt="{{ product.name }}"
                          onerror="this.src='{{ url_for('static', filename='img/default-product.jpg') }}'">
                     {% else %}
@@ -48,7 +48,7 @@
                     {% endif %}
 
                     {% if product.discount_price %}
-                    <span class="discount-badge">-{{ ((product.price - product.discount_price) / product.price * 100) | round }}%</span>
+                    <span class="discount-badge">-{{ ((product.original_price - product.discount_price) / product.price * 100) | round }}%</span>
                     {% endif %}
                     
                     <div class="product-overlay">
@@ -64,16 +64,18 @@
                         <a href="{{ url_for('product', product_id=product.id) }}">{{ product.name }}</a>
                     </h3>
                     <div class="product-price-wrapper">
-                        <!-- Giá cũ bị gạch -->
-                        <span class="product-old-price text-muted text-decoration-line-through me-2">
-                            {{ (product.price * 1.3) | number_format }}đ
-                        </span>
-                        <!-- Giá sản phẩm -->
-                        <span class="product-price">{{ product.price | number_format }}đ</span>
+                         <!-- Giá cũ bị gạch -->
+                         {% if product.discounted_price %}
+                         <span class="product-old-price text-muted text-decoration-line-through me-2">
+                             {{ product.original_price | number_format }}đ
+                         </span>
+                         <!-- Giá sản phẩm -->
+                         <span class="product-price">{{ product.discounted_price | number_format }}đ</span>
+                         {% else %}
+                         <span class="product-price">{{ product.original_price | number_format }}đ</span>
+                         {% endif %}
                     </div>
-                    <div class="product-meta">
-                        <span class="sold-count">Đã bán: {{ product.sold_count if product.sold_count else 158 }}</span>
-                    </div>
+                 
                 </div>
             </div>
             {% endfor %}
@@ -108,7 +110,7 @@
                 <!-- Phần ảnh đại diện -->
                 <div class="card-img-wrapper">
                     {% if post.image_file %}
-                        <img src="{{ url_for('static', filename='uploads/images/posts/' + post.image_file) }}" 
+                        <img src="{{ cloudinary_url(post.image_file) }}" 
                              class="card-img-top" 
                              alt="{{ post.title }}"
                              style="height: 200px; object-fit: cover;">
@@ -551,6 +553,7 @@
         </div>
     </div>
 {% endblock %}
+
 
 <script>
 // Xử lý nút Xem nhanh

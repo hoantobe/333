@@ -3,7 +3,7 @@ from flask_login import UserMixin
 from datetime import datetime
 from unidecode import unidecode
 import re
-
+from sqlalchemy.dialects.postgresql import JSON
 def slugify(text):
     """
     Tạo slug từ text tiếng Việt
@@ -14,10 +14,11 @@ def slugify(text):
     return text
 
 class User(UserMixin, db.Model):
+    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), unique=True, nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    password = db.Column(db.String(60), nullable=False)
+    username = db.Column(db.String(60), unique=True, nullable=False)  # Tăng độ dài
+    email = db.Column(db.String(255), unique=True, nullable=False)    # Tăng độ dài
+    password = db.Column(db.String(255), nullable=False)              # Tăng độ dài
     is_admin = db.Column(db.Boolean, default=False)
     is_active = db.Column(db.Boolean, default=True)
     date_joined = db.Column(db.DateTime, default=datetime.utcnow)
@@ -27,36 +28,43 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return f"User('{self.username}', '{self.email}')"
 
+
 class Category(db.Model):
-    __tablename__ = 'category'
+    __tablename__ = 'categories'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    products = db.relationship('Product', backref='category', lazy=True)
-
-class Product(db.Model):
-    __tablename__ = 'product'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    price = db.Column(db.Float, nullable=False)
-    description = db.Column(db.Text, nullable=True)
-    image_files = db.Column(db.JSON)
-    video_files = db.Column(db.JSON)
-    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
-    variants = db.relationship('Variant', backref='parent_product', lazy=True)
-
-    def __repr__(self):
-        return f'<Product {self.name}>'
 
 class Variant(db.Model):
+    __tablename__ = 'variants'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     value = db.Column(db.Float, nullable=False)
-    image_file = db.Column(db.String(20), nullable=True)
-    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+    image_file = db.Column(db.String(255), nullable=True)  # Tăng độ dài của cột image_file
+    product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
+
+    def __repr__(self):
+        return f"Variant('{self.name}', '{self.value}', '{self.image_file}')"
+
+class Product(db.Model):
+    __tablename__ = 'products'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    original_price = db.Column(db.Float, nullable=False)  # Thêm cột giá gốc
+    discounted_price = db.Column(db.Float, nullable=True)  # Thêm cột giá khuyến mãi
+    image_files = db.Column(JSON, nullable=True)
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
+    category = db.relationship('Category', backref=db.backref('products', lazy=True))
+    variants = db.relationship('Variant', backref='product', lazy=True)
+
+    def __repr__(self):
+        return f"Product('{self.name}', '{self.original_price}')"
+  
 
 class Order(db.Model):
+    __tablename__ = 'orders'
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     shipping_name = db.Column(db.String(100), nullable=False)
     shipping_phone = db.Column(db.String(20), nullable=False)
     shipping_address = db.Column(db.String(200), nullable=False)
@@ -81,10 +89,11 @@ class Order(db.Model):
         return status_map.get(self.status, self.status)
 
 class OrderItem(db.Model):
+    __tablename__ = 'order_items'
     id = db.Column(db.Integer, primary_key=True)
-    order_id = db.Column(db.Integer, db.ForeignKey('order.id'), nullable=False)
-    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
-    variant_id = db.Column(db.Integer, db.ForeignKey('variant.id'))
+    order_id = db.Column(db.Integer, db.ForeignKey('orders.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
+    variant_id = db.Column(db.Integer, db.ForeignKey('variants.id'))
     quantity = db.Column(db.Integer, nullable=False)
     price = db.Column(db.Float, nullable=False)
     product = db.relationship('Product')
@@ -95,6 +104,7 @@ class OrderItem(db.Model):
         return self.price * self.quantity
 
 class Post(db.Model):
+    __tablename__ = 'posts'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(200), nullable=False)  # Tăng độ dài tiêu đề
     content = db.Column(db.Text, nullable=False)  # Giữ nguyên để lưu HTML content
@@ -104,7 +114,7 @@ class Post(db.Model):
     date_updated = db.Column(db.DateTime, onupdate=datetime.utcnow)  # Thời gian cập nhật
     
     # Foreign keys
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     
     # Media files
     image_file = db.Column(db.String(255), nullable=True)  # Tăng độ dài để lưu path dài
@@ -176,7 +186,7 @@ class PostImage(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     filename = db.Column(db.String(255), nullable=False)
-    post_id = db.Column(db.Integer, db.ForeignKey('post.id', ondelete='CASCADE'), nullable=False)
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id', ondelete='CASCADE'), nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     is_featured = db.Column(db.Boolean, default=False)
     
