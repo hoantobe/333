@@ -178,25 +178,30 @@ input[type="file"] {
 
 <script>
 // Thêm phân loại mới
+// Thêm phân loại mới
 document.addEventListener('DOMContentLoaded', function() {
     const addVariantButton = document.getElementById('addVariant');
-    if (addVariantButton) {
-        addVariantButton.addEventListener('click', function() {
-            const container = document.getElementById('variantsContainer');
-            const variantTemplate = container.querySelector('.variant-item').cloneNode(true);
-            
-            // Reset các giá trị
-            variantTemplate.querySelectorAll('input').forEach(input => {
-                input.value = '';
-            });
-            
-            // Reset preview ảnh
-            variantTemplate.querySelector('.variant-preview').innerHTML = '';
-            
-            // Thêm vào container
-            container.appendChild(variantTemplate);
-        });
-    }
+    const variantsContainer = document.getElementById('variantsContainer');
+    const variantTemplate = document.querySelector('.variant-item').cloneNode(true);
+
+    addVariantButton.addEventListener('click', function() {
+        const newVariant = variantTemplate.cloneNode(true);
+        newVariant.querySelectorAll('input').forEach(input => input.value = '');
+        newVariant.querySelector('.variant-preview').innerHTML = '';
+        variantsContainer.appendChild(newVariant);
+    });
+
+    variantsContainer.addEventListener('click', function(e) {
+        if (e.target.classList.contains('remove-variant')) {
+            const variantItem = e.target.closest('.variant-item');
+            if (variantsContainer.children.length > 1) {
+                variantItem.remove();
+            } else {
+                alert('Phải có ít nhất một phân loại.');
+            }
+        }
+    });
+});
 
     // Xử lý xóa biến thể
     document.addEventListener('click', function(e) {
