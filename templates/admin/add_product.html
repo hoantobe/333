@@ -187,19 +187,18 @@ document.addEventListener('DOMContentLoaded', function() {
     addVariantButton.addEventListener('click', function() {
         const newVariant = variantTemplate.cloneNode(true);
         newVariant.querySelectorAll('input').forEach(input => input.value = '');
-        newVariant.querySelector('.variant-preview').innerHTML = '';
         variantsContainer.appendChild(newVariant);
+
+        // Thêm sự kiện xóa cho nút "Xóa" mới
+        newVariant.querySelector('.remove-variant').addEventListener('click', function() {
+            newVariant.remove();
     });
 
-    variantsContainer.addEventListener('click', function(e) {
-        if (e.target.classList.contains('remove-variant')) {
-            const variantItem = e.target.closest('.variant-item');
-            if (variantsContainer.children.length > 1) {
-                variantItem.remove();
-            } else {
-                alert('Phải có ít nhất một phân loại.');
-            }
-        }
+    // Thêm sự kiện xóa cho nút "Xóa" ban đầu
+    document.querySelectorAll('.remove-variant').forEach(button => {
+        button.addEventListener('click', function() {
+            button.closest('.variant-item').remove();
+        });
     });
 });
 
@@ -213,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-
+   
     // Preview ảnh biến thể
     document.addEventListener('change', function(e) {
         if (e.target.classList.contains('variant-image')) {
