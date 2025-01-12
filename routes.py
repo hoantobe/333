@@ -112,12 +112,18 @@ def product(product_id):
         print(f"Template error: {str(template_error)}")
         raise
                              
+
+
 @app.route('/cart')
-@login_required
 def cart():
+    if not current_user.is_authenticated:
+        flash('Bạn cần đăng nhập để truy cập giỏ hàng.', 'warning')
+        return redirect(url_for('home', show_login_modal=True))
+    
     cart_items = session.get('cart', [])
     total_price = sum(item['price'] * item['quantity'] for item in cart_items if 'price' in item)
     return render_template('cart.html', cart_items=cart_items, total_price=total_price)
+
 
 @app.route('/products')
 def products():
