@@ -85,28 +85,19 @@
     </div>
 </div>
 {% endfor %}
-   <h1 class="section-title mb-4">Bài viết mới nhất</h1>
+ 
+   <!-- Hiển thị bài viết mới nhất -->
+<div class="container mt-5">
+    <h1 class="section-title mb-4 text-center">Bài viết mới nhất</h1>
 
     {% if current_user.is_authenticated and current_user.is_admin %}
-   
+        <!-- Admin controls can be added here if needed -->
     {% endif %}
-
-    <!-- Debug: In ra thông tin của mỗi bài viết -->
-    {% for post in posts %}
-        <div class="debug-info mb-3" style="display: none;">
-            <pre>
-                ID: {{ post.id }}
-                Title: {{ post.title }}
-                Status: {{ post.status }}
-                Date: {{ post.date_posted }}
-            </pre>
-        </div>
-    {% endfor %}
 
     <div class="row">
         {% for post in posts %}
         <div class="col-md-4 mb-4">
-            <div class="card blog-card h-100">
+            <div class="card blog-card h-100 shadow-sm">
                 <!-- Phần ảnh đại diện -->
                 <div class="card-img-wrapper">
                     {% if post.image_file %}
@@ -129,7 +120,7 @@
                 </div>
                 
                 <div class="card-body">
-                    <div class="post-meta mb-2">
+                    <div class="post-meta mb-2 text-muted">
                         <span class="date">
                             <i class="far fa-calendar-alt"></i> 
                             {% if post.formatted_date %}
@@ -146,7 +137,7 @@
                         <p class="card-text">{{ post.content|striptags|truncate(60, true, '...') }}</p>
                     {% endif %}
                 </div>
-                <div class="card-footer bg-white border-0">
+                <div class="card-footer bg-white border-0 text-center">
                     <a href="{{ url_for('view_post', slug=post.slug) }}" class="btn btn-outline-primary btn-sm">
                         Đọc thêm <i class="fas fa-arrow-right"></i>
                     </a>
@@ -542,6 +533,77 @@
             font-size: 1rem;
             text-align: center;
         }
+    /* Định dạng tiêu đề phần */
+.section-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+
+/* Định dạng thẻ bài viết */
+.blog-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+}
+
+.blog-card:hover {
+    transform: translateY(-5px);
+}
+
+/* Định dạng ảnh đại diện */
+.card-img-wrapper {
+    overflow: hidden;
+    border-bottom: 1px solid #ddd;
+}
+
+.card-img-top {
+    width: 100%;
+    height: auto;
+}
+
+/* Định dạng phần thân bài viết */
+.card-body {
+    padding: 1rem;
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.card-text {
+    font-size: 1rem;
+    color: #666;
+}
+
+/* Định dạng phần meta bài viết */
+.post-meta {
+    font-size: 0.875rem;
+    color: #999;
+}
+
+/* Định dạng phần chân bài viết */
+.card-footer {
+    padding: 0.75rem 1rem;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+}
+
+.card-footer .btn {
+    font-size: 0.875rem;
+    font-weight: bold;
+    color: #007bff;
+    border-color: #007bff;
+}
+
+.card-footer .btn:hover {
+    color: #0056b3;
+    border-color: #0056b3;
+}
 </style>
     
     <!-- Quick View Modal -->
