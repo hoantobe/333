@@ -438,5 +438,11 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Menu toggle button or menu not found.');
     }
 });
-
+document.addEventListener('DOMContentLoaded', () => {
+    const showLoginModal = {{ 'true' if request.args.get('show_login_modal') else 'false' }};
+    if (showLoginModal) {
+        const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+        loginModal.show();
+    }
+});
 </script>
