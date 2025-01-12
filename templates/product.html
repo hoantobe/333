@@ -8,7 +8,7 @@
 <div class="container py-5">
   <div class="row">
     <!-- Phần ảnh sản phẩm -->
-    <div class="col-md-6">
+    <div class="col-md-6 mb-4">
       <div class="product-gallery">
         <div class="main-image mb-3">
           <img src="{{ product.image_files[0] if product.image_files else url_for('static', filename='img/default-product.jpg') }}" 
@@ -69,7 +69,7 @@
       <!-- Số lượng -->
       <div class="quantity mb-3">
         <h5>Số lượng:</h5>
-        <input type="number" name="quantity" id="quantity" value="1" min="1" class="form-control w-25">
+        <input type="number" name="quantity" id="quantity" value="1" min="1" class="form-control w-50 w-md-25">
       </div>
 
       <!-- Nút thêm vào giỏ hàng và mua ngay -->
@@ -97,8 +97,8 @@
     <h4>Sản phẩm liên quan</h4>
     <div class="row">
       {% for related in related_products %}
-      <div class="col-md-3">
-        <div class="card">
+      <div class="col-md-3 col-sm-6 mb-4">
+        <div class="card h-100">
           <img src="{{ related.image_files[0] if related.image_files else url_for('static', filename='img/default-product.jpg') }}" 
                class="card-img-top" 
                alt="{{ related.name }}">
@@ -114,6 +114,108 @@
   </div>
   {% endif %}
 </div>
+
+<style>
+  .product-gallery .main-image img {
+    width: 100%;
+    height: auto;
+  }
+
+  .product-gallery .thumbnail-images img {
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+  }
+
+  .product-title {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  .price {
+    font-size: 1.5rem;
+  }
+
+  .variants .variant-item {
+    cursor: pointer;
+  }
+
+  .quantity input {
+    max-width: 100px;
+  }
+
+  .actions button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .total-price {
+    font-size: 1.25rem;
+  }
+
+  .product-description {
+    font-size: 1rem;
+  }
+
+  .related-products .card {
+    height: 100%;
+  }
+
+  .related-products .card-img-top {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+
+  .related-products .card-title {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+
+  .related-products .card-text {
+    font-size: 0.875rem;
+    color: #666;
+  }
+
+  .related-products .btn {
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 768px) {
+    .product-gallery .thumbnail-images {
+      justify-content: center;
+    }
+
+    .product-title {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+
+    .price {
+      text-align: center;
+    }
+
+    .variants {
+      text-align: center;
+    }
+
+    .quantity {
+      text-align: center;
+    }
+
+    .actions {
+      text-align: center;
+    }
+
+    .total-price {
+      text-align: center;
+    }
+
+    .product-description {
+      text-align: center;
+    }
+  }
+</style>
 
 <script>
 // Đổi ảnh chính khi nhấp vào thumbnail
