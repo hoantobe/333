@@ -7,12 +7,12 @@
     <!-- Filters -->
     <div class="row mb-4 align-items-center">
         <!-- Bộ lọc danh mục -->
-        <div class="col-md-6">
+        <div class="col-md-6 mb-2 mb-md-0">
             <div class="dropdown category-filter">
-                <button class="btn btn-primary dropdown-toggle px-4 py-2" type="button" id="categoryDropdown" data-bs-toggle="dropdown">
+                <button class="btn btn-primary dropdown-toggle px-4 py-2 w-100 w-md-auto" type="button" id="categoryDropdown" data-bs-toggle="dropdown">
                     {{ selected_category or 'Tất cả danh mục' }}
                 </button>
-                <ul class="dropdown-menu shadow">
+                <ul class="dropdown-menu shadow w-100">
                     <li><a class="dropdown-item" href="{{ url_for('products') }}">Tất cả</a></li>
                     {% for category in categories %}
                     <li><a class="dropdown-item" href="{{ url_for('products', category=category.name) }}">{{ category.name }}</a></li>
@@ -23,7 +23,7 @@
     
         <!-- Bộ lọc sắp xếp -->
         <div class="col-md-6 text-end">
-            <div class="sort-filter d-inline-flex align-items-center">
+            <div class="sort-filter d-inline-flex align-items-center w-100 justify-content-end">
                 <span class="me-2">Sắp xếp theo:</span>
                 <a href="{{ url_for('products', category=selected_category, sort='newest') }}" 
                    class="btn btn-light border {% if request.args.get('sort') == 'newest' %}active{% endif %}">
@@ -45,8 +45,8 @@
     <div class="row">
         {% if products.items %}
             {% for product in products.items %}
-            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-                <div class="card product-card">
+            <div class="col-lg-3 col-md-4 col-sm-6 col-12 mb-4">
+                <div class="card product-card h-100">
                     <div class="position-relative">
                         <a href="{{ url_for('product', product_id=product.id) }}" class="product-link">
                             <div id="carousel{{ product.id }}" class="carousel slide" data-bs-ride="carousel">
@@ -178,6 +178,7 @@
         overflow: hidden;
         display: -webkit-box;
         -webkit-line-clamp: 2;
+        line-clamp: 2;
         -webkit-box-orient: vertical;
         text-align: center;
     }
@@ -254,14 +255,13 @@
     }
 </style>
 
-
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         // Kích hoạt tự động carousel cho các sản phẩm
         const carousels = document.querySelectorAll('.carousel');
         carousels.forEach(carousel => {
             new bootstrap.Carousel(carousel, {
-                interval: 22000, // Chuyển ảnh sau 3 giây
+                interval: 2000, // Chuyển ảnh sau 3 giây
                 wrap: true // Lặp lại khi hết ảnh
             });
         });
