@@ -112,18 +112,18 @@ def product(product_id):
         print(f"Template error: {str(template_error)}")
         raise
                              
-
-
 @app.route('/cart')
 def cart():
     if not current_user.is_authenticated:
         flash('Bạn cần đăng nhập để truy cập giỏ hàng.', 'warning')
-        return redirect(url_for('home', show_login_modal=True))
+        return redirect(url_for('home', show_login_modal=True, from_cart=True))
     
+    # Lấy dữ liệu giỏ hàng từ session
     cart_items = session.get('cart', [])
     total_price = sum(item['price'] * item['quantity'] for item in cart_items if 'price' in item)
+    
+    # Truyền dữ liệu giỏ hàng và tổng giá trị đến template
     return render_template('cart.html', cart_items=cart_items, total_price=total_price)
-
 
 @app.route('/products')
 def products():
@@ -271,7 +271,7 @@ def register():
         db.session.add(new_user)
         db.session.commit()
 
-        flash('Bạn đã đăng kí thành công!', 'success')
+        flash('Your account has been created! You are now able to log in', 'success')
         return redirect(url_for('home', show_login_modal=True))
 
     return render_template('register.html')
@@ -501,6 +501,10 @@ def posts():
     posts = Post.query.all()
     return render_template('posts.html', posts=posts)
 
+def allowed_file(filename):
+    ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'mp4', 'mov', 'avi'}
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 @app.route('/admin/posts', methods=['GET', 'POST'])
 @login_required
 def new_post():
@@ -539,7 +543,7 @@ def new_post():
             db.session.add(post)
             db.session.commit()
             flash('Bài viết đã được tạo thành công!', 'success')
-            return redirect(url_for('posts'))
+            return redirect(url_for('manage_posts'))
         
         except Exception as e:
             db.session.rollback()
@@ -1423,8 +1427,11 @@ def edit_post(post_id):
     return render_template('admin/edit_post.html', post=post)
 
 @app.route('/buy_now/<int:product_id>', methods=['POST'])
-@login_required
 def buy_now(product_id):
+    if not current_user.is_authenticated:
+        flash('Bạn cần đăng nhập để mua hàng.', 'warning')
+        return jsonify({'success': False, 'redirect_url': url_for('home', show_login_modal=True, from_cart=True)})
+
     try:
         data = request.get_json()
         variant_id = data.get('variant')
