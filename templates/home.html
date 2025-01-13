@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}TOBE - Trang Chủ{% endblock %}
+
 {% block content %}
 <!-- Banner Section -->
 <div class="banner-section">
@@ -24,8 +24,21 @@
         </button>
     </div>
 </div>
-
+ <!-- Phần giới thiệu website -->
+ <section id="gioi-thieu" class="intro-section">
+    <div class="intro-content">
+        <h2 class="section-title">Chào Mừng Đến Với TOBE</h2>
+        <p class="intro-text">TOBE là điểm đến lý tưởng cho những ai yêu thích thời trang và mong muốn mua sắm thông minh. Chúng tôi chuyên cung cấp sản phẩm thời trang hàng hiệu và các bài đánh giá chi tiết trên các sàn thương mại điện tử.</p>
+        <p class="intro-text">Tại TOBE, chúng tôi cam kết cung cấp những thông tin đánh giá chính xác, khách quan và giúp khách hàng tìm được sản phẩm phù hợp nhất. Khám phá thêm nội dung thú vị tại <a href="{{ url_for('blog') }}">Blog TOBE</a> và <a href="{{ url_for('products') }}">Cửa Hàng</a> của chúng tôi.</p>
+        <a href="{{ url_for('products') }}" class="btn btn-primary btn-custom">Khám Phá Cửa Hàng</a>
+    </div>
+    <div class="intro-image">
+        <img src="{{ url_for('static', filename='img/TOBEP.png') }}" alt="TOBE Fashion" class="img-fluid">
+    </div>
+</section>
 <!-- Featured Categories -->
+<section id="san-pham-noi-bat" class="featured-products-section">
+    <h2 class="section-title">Sản Phẩm Nổi Bật</h2>
 {% for category, products in featured_products.items() %}
 <div class="category-section">
     <div class="container">
@@ -85,7 +98,27 @@
     </div>
 </div>
 {% endfor %}
- 
+
+     <!-- Phần chính sách ưu đãi khách hàng -->
+     <section id="chinh-sach-uu-dai" class="policy-section">
+        <h2 class="section-title">Chính Sách Ưu Đãi Khách Hàng</h2>
+        <div class="policy-grid">
+            <div class="policy-card">
+                <h3 class="policy-title">Gói Thành Viên</h3>
+                <p class="policy-text">Tham gia gói thành viên của TOBE để nhận được nhiều ưu đãi đặc biệt và tích điểm thưởng cho mỗi lần mua sắm.</p>
+            </div>
+            <div class="policy-card">
+                <h3 class="policy-title">Free Ship</h3>
+                <p class="policy-text">Miễn phí vận chuyển cho tất cả các đơn hàng trên 500,000đ. Áp dụng trên toàn quốc.</p>
+            </div>
+            <div class="policy-card">
+                <h3 class="policy-title">Voucher</h3>
+                <p class="policy-text">Nhận ngay voucher giảm giá 20% cho lần mua sắm đầu tiên khi đăng ký nhận bản tin của chúng tôi.</p>
+            </div>
+        </div>
+     </section>
+
+
    <!-- Hiển thị bài viết mới nhất -->
 <div class="container mt-5">
     <h1 class="section-title mb-4 text-center">Bài viết mới nhất</h1>
@@ -149,6 +182,54 @@
 
     
 <style>
+.policy-section {
+    background: #f9f9f9;
+    padding: 40px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
+}
+.policy-section .section-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.policy-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+.policy-card {
+    flex: 1 1 calc(33.333% - 20px);
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+.policy-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+.policy-text {
+    font-size: 1rem;
+    color: #555;
+}
+    .featured-products-section {
+    margin-top: 40px;
+}
+.featured-products-section .section-title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
     .banner-section {
         width: 100%;
         margin: 0;
@@ -603,6 +684,107 @@
 .card-footer .btn:hover {
     color: #0056b3;
     border-color: #0056b3;
+}
+.intro-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f9f9f9;
+    padding: 40px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+.intro-content {
+    flex: 1;
+    padding-right: 20px;
+}
+.intro-content .section-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+.intro-content .intro-text {
+    font-size: 1.1rem;
+    color: #555;
+    margin-bottom: 20px;
+}
+.intro-content .btn-custom {
+    font-size: 1rem;
+    padding: 10px 20px;
+    background-color: #000;
+    color: #fff;
+    border: 2px solid #000;
+    transition: all 0.3s ease;
+}
+.intro-content .btn-custom:hover {
+    background-color: #fff;
+    color: #000;
+    border-color: #000;
+}
+.intro-content .btn-custom:focus,
+.intro-content .btn-custom:active {
+    outline: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+.intro-image {
+    flex: 1;
+    text-align: center;
+}
+.intro-image img {
+    max-width: 100%;
+    border-radius: 8px;
+}
+/* Media Queries for Mobile */
+@media (max-width: 768px) {
+    .intro-section {
+        flex-direction: column;
+        text-align: center;
+    }
+    .intro-content {
+        padding-right: 0;
+        margin-bottom: 20px;
+    }
+    .intro-content .section-title {
+        font-size: 2rem;
+    }
+    .intro-content .intro-text {
+        font-size: 1rem;
+    }
+    .intro-content .btn-custom {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
+    .intro-image {
+        text-align: center;
+    }
+    .featured-products-section .section-title {
+        font-size: 1.5rem;
+    }
+    .section-header h3 {
+        font-size: 1.25rem;
+    }
+    .section-header .view-all {
+        font-size: 0.9rem;
+    }
+    .product-card {
+        flex: 1 1 calc(50% - 20px);
+    }
+    .product-title {
+        font-size: 1rem;
+    }
+    .product-price-wrapper {
+        flex-direction: column;
+    }
+    .product-old-price {
+        margin-right: 0;
+        margin-bottom: 5px;
+    }
+    .product-price {
+        font-size: 0.9rem;
+    }
 }
 </style>
     
