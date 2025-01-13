@@ -1455,7 +1455,7 @@ def buy_now(product_id):
 
     except Exception as e:
         print(f"Lỗi mua ngay: {e}")
-        return jsonify({'success': False, 'message': 'Có lỗi xảy ra!'})
+        return jsonify({'success': False, 'message': 'Hãy Đăng Nhập Trước Khi Bấm Mua!'})
 
 @app.route('/sitemap.xml')
 def sitemap():
