@@ -1449,3 +1449,18 @@ def buy_now(product_id):
     except Exception as e:
         print(f"Lỗi mua ngay: {e}")
         return jsonify({'success': False, 'message': 'Có lỗi xảy ra!'})
+
+@app.route('/sitemap.xml')
+def sitemap():
+    filepath = os.path.join(basedir, 'sitemap.xml')
+    # Đảm bảo tệp sitemap.xml tồn tại và trả về đúng nội dung
+    with open(filepath, 'r') as file:
+        return Response(file.read(), mimetype="application/xml")
+
+
+from flask import Response
+
+@app.route('/robots.txt')
+def robots_txt():
+    content = "User-agent: *\nDisallow:"
+    return Response(content, mimetype="text/plain")
