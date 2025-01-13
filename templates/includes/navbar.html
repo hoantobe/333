@@ -1,16 +1,11 @@
 <!-- SuperNav -->
 <div class="superNav border-bottom py-2 bg-light">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 centerOnMobile">
-                <span class="d-none d-lg-inline-block d-md-inline-block d-sm-inline-block d-xs-none me-3"><strong>hoanghoantt05@gmail.com</strong></span>
-                <span class="me-3"><i class="fa-solid fa-phone me-1 text-warning"></i> <strong>ZALO : 0334356427</strong></span>
-            </div>
-            <div class="col-12">
-                <div class="marquee" style="overflow: hidden;">
+    <div class="marquee-container">
+      
+             <div class="marquee" >
                     <span><trong>TOBE cung cấp hàng hiệu đến tay tất cả mọi người</trong></span>
                 </div>
-            </div>
+            
             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 d-none d-lg-block d-md-block-d-sm-block d-xs-none text-end">
                 <!-- Additional content can be added here if needed -->
             </div>
@@ -355,28 +350,34 @@ a {
         text-align: center;
     }
 }
-.marquee {
-    overflow: hidden;
+.marquee-container {
     position: relative;
+    overflow: hidden;
+    background: linear-gradient(90deg, #f3f3f3, #737973);
+    color: rgb(15, 11, 11);
+    padding: 10px 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+.marquee {
+    display: inline-block;
     white-space: nowrap;
-    box-sizing: border-box;
+    animation: marquee 6s linear infinite;
 }
 
 .marquee span {
     display: inline-block;
     padding-left: 100%;
-    font-size: 16px;
-    font-weight: bold;
-    color: #333;
-    animation: marquee 15s linear infinite;
 }
 
 @keyframes marquee {
     0% {
-        transform: translate(0, 0);
+        transform: translateX(0%);
     }
     100% {
-        transform: translate(-100%, 0);
+        transform: translateX(-100%);
     }
 }
 </style>
@@ -439,8 +440,12 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 document.addEventListener('DOMContentLoaded', () => {
-    const showLoginModal = {{ 'true' if request.args.get('show_login_modal') else 'false' }};
-    if (showLoginModal) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const showLoginModal = urlParams.get('show_login_modal') === 'true';
+    const fromCart = urlParams.get('from_cart') === 'true';
+    const fromRegister = urlParams.get('from_register') === 'true';
+
+    if (showLoginModal || fromCart || fromRegister) {
         const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
         loginModal.show();
     }
