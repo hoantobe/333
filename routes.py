@@ -1,4 +1,4 @@
-from flask import render_template, url_for, flash, redirect, request, session, abort, jsonify
+from flask import render_template, url_for, flash, redirect, request, session, abort, jsonify, Response
 from flask_mail import Mail, Message
 from app import app
 from extensions import db
@@ -1455,17 +1455,18 @@ def buy_now(product_id):
 
     except Exception as e:
         print(f"Lỗi mua ngay: {e}")
-        return jsonify({'success': False, 'message': 'Hãy Đăng Nhập Trước Khi Bấm Mua!'})
+        return jsonify({'success': False, 'message': 'Có lỗi xảy ra!'})
+    
+basedir = os.path.dirname(os.path.abspath(__file__))
 
 @app.route('/sitemap.xml')
 def sitemap():
     filepath = os.path.join(basedir, 'sitemap.xml')
-    # Đảm bảo tệp sitemap.xml tồn tại và trả về đúng nội dung
-    with open(filepath, 'r') as file:
-        return Response(file.read(), mimetype="application/xml")
-
-
-from flask import Response
+    if os.path.exists(filepath):
+        with open(filepath, 'r') as file:
+            return Response(file.read(), mimetype="application/xml")
+    else:
+        return abort(404)  # Trả về lỗi 404 nếu tệp không tồn tại
 
 @app.route('/robots.txt')
 def robots_txt():
