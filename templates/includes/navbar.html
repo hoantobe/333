@@ -64,8 +64,12 @@
                         <i class="fa-solid fa-circle-user me-1"></i> Tài Khoản
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
-                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Đăng Nhập</a></li>
-                        <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Đăng Ký</a></li>
+                        {% if current_user.is_authenticated %}
+                            <li><a class="dropdown-item" href="{{ url_for('logout') }}">Đăng Xuất</a></li>
+                        {% else %}
+                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Đăng Nhập</a></li>
+                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Đăng Ký</a></li>
+                        {% endif %}
                     </ul>
                 </li>
             </ul>
@@ -401,12 +405,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.success) {
                 // Hiển thị thông báo thành công
                 alert('Đăng nhập thành công!');
-                document.querySelector('.header-right .btn').innerHTML = `
-                    <a href="/logout" class="btn btn-primary">Đăng Xuất</a>
-                `;
                 // Ẩn modal đăng nhập
                 const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
                 loginModal.hide();
+                // Reset trang
+                setTimeout(() => {
+                    location.reload();
+                }, 500); // Đợi một chút để modal đóng hoàn toàn
             } else {
                 // Hiển thị thông báo lỗi
                 alert(data.message || 'Đăng nhập thất bại!');
@@ -439,6 +444,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Menu toggle button or menu not found.');
     }
 });
+
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const showLoginModal = urlParams.get('show_login_modal') === 'true';
@@ -446,8 +452,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const fromRegister = urlParams.get('from_register') === 'true';
 
     if (showLoginModal || fromCart || fromRegister) {
-        const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
-        loginModal.show();
+        const loginModal = document.getElementById('loginModal');
+        if (loginModal) {
+            const modal = new bootstrap.Modal(loginModal);
+            modal.show();
+        } else {
+            console.error('Login modal not found.');
+        }
     }
 });
 </script>
