@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<head>
+    <html lang="vi">
+    <title>Chính Sách Bán Hàng Cùng TOBE</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+        }
+        header h1 {
+            margin: 0;
+        }
+        section {
+            background-color: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        section h2 {
+            color: #444;
+        }
+        .policy {
+            list-style-type: none;
+            padding: 0;
+        }
+        .policy li {
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        .join-button {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .join-button a {
+            text-decoration: none;
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .join-button a:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Chính Sách Bán Hàng Cùng TOBE</h1>
+    </header>
+
+    <div class="container">
+        <section>
+            <h2>Giới Thiệu Chương Trình</h2>
+            <p>TOBE là chương trình hợp tác kinh doanh giúp bạn dễ dàng kiếm tiền thông qua việc giới thiệu các sản phẩm thời trang của TOBE. Chỉ cần tham gia, bạn sẽ nhận được hoa hồng hấp dẫn cho mỗi sản phẩm bán được.</p>
+        </section>
+
+        <section>
+            <h2>Chính Sách Hợp Tác</h2>
+            <ul class="policy">
+                <li><strong>Đăng Ký:</strong> Hoàn toàn miễn phí và dễ dàng. Chỉ cần tạo tài khoản và tham gia ngay.</li>
+                <li><strong>Hoa Hồng:</strong> Nhận hoa hồng lên đến 20% trên mỗi đơn hàng thành công.</li>
+                <li><strong>Hệ Thống Theo Dõi:</strong> TOBE cung cấp hệ thống theo dõi minh bạch để bạn dễ dàng quản lý doanh thu.</li>
+                <li><strong>Thanh Toán:</strong> Thanh toán được thực hiện định kỳ hàng tháng qua các phương thức tiện lợi như chuyển khoản ngân hàng.</li>
+                <li><strong>Hỗ Trợ:</strong> Đội ngũ hỗ trợ luôn sẵn sàng giúp bạn giải đáp thắc mắc và tối ưu hóa doanh thu.</li>
+            </ul>
+        </section>
+        <div class="join-button">
+            <a href="#">Tham Gia Ngay</a>
+        </div>
+        <section>
+            <h2>Lợi Ích Khi Tham Gia</h2>
+            <p>Tham gia chương trình TOBE, bạn sẽ được:</p>
+            <ul>
+                <li>Tiếp cận với các sản phẩm thời trang chất lượng cao.</li>
+                <li>Hỗ trợ quảng bá sản phẩm thông qua các công cụ chuyên nghiệp.</li>
+                <li>Tham gia cộng đồng kinh doanh thời trang năng động.</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Liên Hệ</h2>
+            <p>Nếu bạn cần hỗ trợ thêm thông tin hoặc có câu hỏi, vui lòng liên hệ qua email: <a href="mailto:hoan05052002@gmail.com">hoan05052002@gmail.com</a>.</p>
+        </section>
+    </div>
+    <div class="join-button">
+        <a href="#">Tham Gia Ngay</a>
+    </div>
+</body>
+</html>
+{% endblock %}

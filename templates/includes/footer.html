@@ -1,0 +1,180 @@
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <!-- Thông tin liên hệ -->
+            <div class="footer-section">
+                <h5>Thông tin liên hệ</h5>
+                <ul class="contact-info">
+                    <li>
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>872/26/46 Đường Quang Trung, Quận Gò Vấp, TP.HCM</span>
+                    </li>
+                    <li>
+                        <i class="fas fa-phone"></i>
+                        <a href="tel:0334356427">0334356427</a>
+                    </li>
+                    <li>
+                        <i class="fas fa-envelope"></i>
+                        <a href="mailto:hoan05052002@gmail.com">hoan05052002@gmail.com</a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Chính sách -->
+            <div class="footer-section">
+                <h5>Chính sách</h5>
+                <ul class="footer-links">
+                    <li><a href="{{ url_for('privacy_policy') }}">Chính sách bảo mật</a></li>
+                    <li><a href="{{ url_for('shipping_policy') }}">Chính sách vận chuyển</a></li>
+                    <li><a href="{{ url_for('return_policy') }}">Chính sách đổi trả</a></li>
+                    <li><a href="{{ url_for('payment_policy') }}">Chính sách thanh toán</a></li>
+                    <li><a href="{{ url_for('affiliatepolicy') }}">Chính sách bán hàng cùng TOBE</a></li>
+                </ul>
+            </div>
+
+            <!-- Hỗ trợ khách hàng -->
+            <div class="footer-section">
+                <h5>Hỗ trợ khách hàng</h5>
+                <ul class="footer-links">
+                    <li><a href="{{ url_for('home') }}">Trang chủ</a></li>
+                    <li><a href="{{ url_for('products') }}">Sản phẩm</a></li>
+                    <li><a href="{{ url_for('blog') }}">Bài viết</a></li>
+                    <li><a href="{{ url_for('contact') }}">Liên hệ</a></li>
+                    <li><a href="{{ url_for('aboutus') }}">Về chúng tôi</a></li>
+                </ul>
+            </div>
+
+            <!-- Kết nối với chúng tôi -->
+            <div class="footer-section">
+                <h5>Kết nối với chúng tôi</h5>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/profile.php?id=100009111111111" target="_blank" rel="noopener"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/tobe.store" target="_blank" rel="noopener"   ><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.tiktok.com/@tobe.store" target="_blank"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+        </div>
+        <a href="//www.dmca.com/Protection/Status.aspx?ID=e04efff8-ac54-49d3-8de8-35b2ca755a7c" title="DMCA.com Protection Status" class="dmca-badge"> <img src ="https://images.dmca.com/Badges/dmca_protected_sml_120aj.png?ID=e04efff8-ac54-49d3-8de8-35b2ca755a7c"  alt="DMCA.com Protection Status" /></a>  <script src="https://images.dmca.com/Badges/DMCABadgeHelper.min.js"> </script>
+        <div class="footer-bottom">
+            <p>&copy; {{ current_year }} TOBE. Tất cả quyền được bảo lưu.</p>
+        </div>
+    </div>
+    
+</footer>
+
+<style>
+.footer {
+    background-color: #111111;
+    color: #999;
+    padding: 60px 0 30px;
+    border-top: 1px solid #2a2a2a;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.footer-section h5 {
+    color: #fff;
+    font-size: 16px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.contact-info {
+    list-style: none;
+    padding: 0;
+}
+
+.contact-info li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.contact-info i {
+    color: #666;
+    font-size: 16px;
+    margin-top: 3px;
+}
+
+.contact-info a {
+    color: #999;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.contact-info a:hover {
+    color: #fff;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-links li {
+    margin-bottom: 12px;
+}
+
+.footer-links a {
+    color: #999;
+    text-decoration: none;
+    transition: color 0.3s;
+    font-size: 14px;
+}
+
+.footer-links a:hover {
+    color: #fff;
+}
+
+.social-links {
+    display: flex;
+    gap: 15px;
+}
+
+.social-links a {
+    color: #999;
+    font-size: 20px;
+    transition: color 0.3s;
+}
+
+.social-links a:hover {
+    color: #fff;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 30px;
+    border-top: 1px solid #2a2a2a;
+}
+
+.footer-bottom p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+}
+
+@media (max-width: 992px) {
+    .footer-content {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
+    }
+}
+
+@media (max-width: 576px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .footer {
+        padding: 40px 0 20px;
+    }
+}
+</style> 

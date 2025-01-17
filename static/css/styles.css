@@ -1,0 +1,456 @@
+.thumbnail-images img {
+    width: 80px; /* Kích thước hình ảnh nhỏ */
+    cursor: pointer; /* Hiển thị con trỏ khi hover */
+    margin-right: 5px; /* Khoảng cách giữa các hình ảnh nhỏ */
+}
+.fancy {
+    background-color: transparent;
+    border: 2px solid #000;
+    border-radius: 0;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    float: right;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    margin: 0;
+    outline: none;
+    overflow: visible;
+    padding: 1.25em 2em;
+    position: relative;
+    text-align: center;
+    text-decoration: none;
+    text-transform: none;
+    transition: all 0.3s ease-in-out;
+    font-size: 13px;
+   }
+   
+   .fancy::before {
+    content: " ";
+    width: 1.5625rem;
+    height: 2px;
+    background: black;
+    top: 50%;
+    left: 1.5em;
+    position: absolute;
+    transform: translateY(-50%);
+    transform-origin: center;
+    transition: background 0.3s linear, width 0.3s linear;
+   }
+   
+   .fancy .text {
+    font-size: 1.125em;
+    line-height: 1.33333em;
+    padding-left: 2em;
+    display: block;
+    text-align: left;
+    transition: all 0.3s ease-in-out;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: black;
+   }
+   
+   .fancy .top-key {
+    height: 2px;
+    width: 1.5625rem;
+    top: -2px;
+    left: 0.625rem;
+    position: absolute;
+    background: #e8e8e8;
+    transition: width 0.5s ease-out, left 0.3s ease-out;
+   }
+   
+   .fancy .bottom-key-1 {
+    height: 2px;
+    width: 1.5625rem;
+    right: 1.875rem;
+    bottom: -2px;
+    position: absolute;
+    background: #e8e8e8;
+    transition: width 0.5s ease-out, right 0.3s ease-out;
+   }
+   
+   .fancy .bottom-key-2 {
+    height: 2px;
+    width: 0.625rem;
+    right: 0.625rem;
+    bottom: -2px;
+    position: absolute;
+    background: #e8e8e8;
+    transition: width 0.5s ease-out, right 0.3s ease-out;
+   }
+   
+   .fancy:hover {
+    color: white;
+    background: black;
+   }
+   
+   .fancy:hover::before {
+    width: 0.9375rem;
+    background: white;
+   }
+   
+   .fancy:hover .text {
+    color: white;
+    padding-left: 1.5em;
+   }
+   
+   .fancy:hover .top-key {
+    left: -2px;
+    width: 0px;
+   }
+   
+   .fancy:hover .bottom-key-1,
+    .fancy:hover .bottom-key-2 {
+    right: 0;
+    width: 0;
+   }
+   /* From Uiverse.io by doniaskima */ 
+.btn-12,
+.btn-12 *,
+.btn-12 :after,
+.btn-12 :before,
+.btn-12:after,
+.btn-12:before {
+  border: 0 solid;
+  box-sizing: border-box;
+}
+
+.btn-12 {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-appearance: button;
+  background-color: #000;
+  background-image: none;
+  color: #fff;
+  cursor: pointer;
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif,
+    Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol, Noto Color Emoji;
+  font-size: 100%;
+  font-weight: 900;
+  line-height: 1.5;
+  margin: 0;
+  webkit-mask-image: -webkit-radial-gradient(#000, #fff);
+  padding: 0;
+  text-transform: uppercase;
+}
+
+.btn-12:disabled {
+  cursor: default;
+}
+
+.btn-12:-moz-focusring {
+  outline: auto;
+}
+
+.btn-12 svg {
+  display: block;
+  vertical-align: middle;
+}
+
+.btn-12 [hidden] {
+  display: none;
+}
+
+.btn-12 {
+  border-radius: 99rem;
+  border-width: 2px;
+  overflow: hidden;
+  padding: 0.8rem 3rem;
+  position: relative;
+}
+
+.btn-12 span {
+  mix-blend-mode: difference;
+}
+
+.btn-12:after,
+.btn-12:before {
+  background: linear-gradient(
+    90deg,
+    #fff 25%,
+    transparent 0,
+    transparent 50%,
+    #fff 0,
+    #fff 75%,
+    transparent 0
+  );
+  content: "";
+  inset: 0;
+  position: absolute;
+  transform: translateY(var(--progress, 100%));
+  transition: transform 0.2s ease;
+}
+
+.btn-12:after {
+  --progress: -100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0,
+    transparent 25%,
+    #fff 0,
+    #fff 50%,
+    transparent 0,
+    transparent 75%,
+    #fff 0
+  );
+  z-index: -1;
+}
+
+.btn-12:hover:after,
+.btn-12:hover:before {
+  --progress: 0;
+}
+/* From Uiverse.io by andrew-demchenk0 */ 
+.button {
+    position: relative;
+    width: 240px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    border: 1px solid #34974d;
+    background-color: #3aa856;
+  }
+  
+  .button, .button__icon, .button__text {
+    transition: all 0.3s;
+  }
+  
+  .button .button__text {
+    transform: translateX(30px);
+    color: #fff;
+    font-weight: 300px;
+  }
+  
+  .button .button__icon {
+    position: absolute;
+    transform: translateX(190px);
+    height: 100%;
+    width: 50px;
+    background-color: #34974d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .button .svg {
+    width: 30px;
+    stroke: #fff;
+  }
+  
+  .button:hover {
+    background: #34974d;
+  }
+  
+  .button:hover .button__text {
+    color: transparent;
+  }
+  
+  .button:hover .button__icon {
+    width: 148px;
+    transform: translateX(0);
+  }
+  
+  .button:active .button__icon {
+    background-color: #2e8644;
+  }
+  
+  .button:active {
+    border: 1px solid #2e8644;
+  }
+  .carousel-inner img {
+    width: 100%; /* Đảm bảo hình ảnh chiếm toàn bộ chiều rộng */
+    height: 400px; /* Đặt chiều cao cố định */
+    object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
+}
+
+.carousel {
+    border-radius: 10px; /* Bo góc cho carousel */
+    margin: 0; /* Bỏ khoảng cách bên ngoài */
+    padding: 0; /* Bỏ khoảng cách bên trong */
+    border: none; /* Bỏ đường viền nếu có */
+}
+
+.carousel-inner img {
+    width: 100%; /* Đảm bảo hình ảnh chiếm toàn bộ chiều rộng */
+    height: 400px; /* Đặt chiều cao cố định */
+    object-fit: cover; /* Đảm bảo hình ảnh không bị méo */
+}
+.navbar {
+    background-color: #fff; /* Màu nền trắng */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+}
+
+.navbar-brand {
+    font-size: 1.5rem; /* Kích thước chữ cho thương hiệu */
+    font-weight: bold; /* Chữ đậm */
+    color: #333; /* Màu chữ */
+}
+
+.navbar-nav .nav-link {
+    color: #555; /* Màu chữ cho liên kết */
+    padding: 15px 20px; /* Khoảng cách cho liên kết */
+    transition: color 0.3s; /* Hiệu ứng chuyển đổi */
+}
+
+.navbar-nav .nav-link:hover {
+    color: #007bff; /* Màu chữ khi di chuột qua */
+    text-decoration: underline; /* Gạch chân khi di chuột qua */
+}
+
+.navbar-toggler {
+    border-color: #007bff; /* Màu viền cho nút điều khiển */
+}
+
+.navbar-toggler-icon {
+    background-color: #007bff; /* Màu nền cho biểu tượng điều khiển */
+}
+
+
+/* Header styles */
+.main-header {
+  padding: 20px 0;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+/* Logo */
+.logo img {
+  height: 40px;
+}
+
+/* Search bar */
+.search-bar {
+  flex: 1;
+  max-width: 600px;
+}
+
+.search-bar form {
+  display: flex;
+  position: relative;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 10px 15px;
+  border: 2px solid #eee;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.search-bar button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+}
+
+/* User actions */
+.user-actions {
+  display: flex;
+  gap: 20px;
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+  font-size: 13px;
+  position: relative;
+}
+
+.action-item i {
+  font-size: 20px;
+  margin-bottom: 5px;
+}
+
+.badge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ff4747;
+  color: white;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+}
+
+/* Main navigation */
+.main-nav {
+  background: #fff;
+  border-bottom: 1px solid #eee;
+}
+
+.nav-menu {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  justify-content: space-between;
+}
+
+.menu-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.menu-item a {
+  color: #333;
+  text-decoration: none;
+  padding: 15px 0;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.menu-item i {
+  font-size: 10px;
+  margin-left: 5px;
+  color: #666;
+}
+
+.menu-item:hover > a {
+  color: #ff4747;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .user-actions span {
+      display: none;
+  }
+  
+  .nav-menu {
+      flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 768px) {
+  .header-content {
+      flex-wrap: wrap;
+  }
+  
+  .search-bar {
+      order: 3;
+      width: 100%;
+      max-width: none;
+      margin-top: 15px;
+  }
+}

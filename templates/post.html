@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block head %}
+<meta name="description" content="{{ post.summary }}">
+<meta name="keywords" content="thời trang, đánh giá sản phẩm, {{ post.title }}">
+<meta name="author" content="{{ post.author.username }}">
+<title>{{ post.title }} - TOBE</title>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <article class="blog-post">
+    <h1 class="blog-post-title">{{ post.title }}</h1>
+    <div class="blog-post-meta">
+      <span class="date">
+        <i class="far fa-calendar-alt"></i> 
+        {{ post.date_posted.strftime('%d-%m-%Y') }}
+      </span>
+      <span class="author">
+        <i class="far fa-user"></i> 
+        {{ post.author.username }}
+      </span>
+    </div>
+    <!-- Thêm phần tóm tắt bài viết -->
+    <div class="blog-post-summary mt-3">
+      <h2>Tóm tắt</h2>
+      <p>{{ post.summary }}</p>
+    </div>
+
+    <div class="content-wrapper">
+      <div class="main-content">
+        <h2>Nội dung bài viết</h2>
+        {{ post.content|safe }}
+
+        <!-- Khu vực bài viết liên quan -->
+        <div class="related-posts-section my-4">
+          <h3>Bài viết liên quan</h3>
+          <div class="related-posts-list">
+            {% for related_post in related_posts %}
+            <div class="related-post-card">
+              <a href="{{ url_for('view_post', slug=related_post.slug) }}">
+                <img src="{{ related_post.image_url }}" alt="{{ related_post.title }}" class="related-post-image">
+                <h4 class="related-post-title">{{ related_post.title }}</h4>
+              </a>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>
+
+<style>
+.blog-post-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.blog-post-meta {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 20px;
+  font-size: 1rem;
+  color: #777;
+}
+
+.blog-post-summary {
+  background: #f9f9f9;
+  padding: 15px;
+  border-left: 4px solid #007bff;
+  margin-bottom: 20px;
+}
+
+.blog-post-summary h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.blog-post-summary p {
+  font-size: 1rem;
+  color: #555;
+}
+
+.content-wrapper {
+  margin-top: 20px;
+}
+
+.main-content h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.related-posts-section {
+  background: #f1f1f1;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.related-posts-section h3 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.related-posts-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.related-post-card {
+  flex: 1 1 calc(33.333% - 20px);
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.related-post-card:hover {
+  transform: translateY(-5px);
+}
+
+.related-post-image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.related-post-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #333;
+  padding: 10px;
+  text-align: center;
+}
+
+/* Media Queries for Mobile */
+@media (max-width: 768px) {
+  .blog-post-title {
+    font-size: 2rem;
+  }
+  .blog-post-meta {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .blog-post-summary h2 {
+    font-size: 1.25rem;
+  }
+  .blog-post-summary p {
+    font-size: 0.9rem;
+  }
+  .main-content h2 {
+    font-size: 1.5rem;
+  }
+  .related-post-card {
+    flex: 1 1 100%;
+  }
+  .related-post-title {
+    font-size: 1rem;
+  }
+}
+</style>
+{% endblock %}

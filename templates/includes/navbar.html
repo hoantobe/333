@@ -1,0 +1,471 @@
+<!-- SuperNav -->
+<div class="superNav border-bottom py-2 bg-light">
+    <div class="marquee-container">
+      
+             <div class="marquee" >
+                    <span><trong>Khám phá thời trang, chọn đúng phong cách – Review chân thực, mua sắm thông minh!</trong></span>
+                    <span><strong>Khám phá thời trang, chọn đúng phong cách – Review chân thực, mua sắm thông minh!</strong></span>
+                </div>
+            
+            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 d-none d-lg-block d-md-block-d-sm-block d-xs-none text-end">
+                <!-- Additional content can be added here if needed -->
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg bg-white sticky-top navbar-light p-3 shadow-sm">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('home') }}"><img src="{{ url_for('static', filename='img/T.png') }}" alt="TOBE" style="height: 90px; margin-right: 10px;"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="mx-auto my-3 d-lg-none d-sm-block d-xs-block">
+            <form action="{{ url_for('search') }}" method="GET" class="input-group">
+                <span class="border-dark input-group-text bg-dark text-white">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+                <input type="text" name="q" class="form-control border-dark" style="color:#7a7a7a" placeholder="Tìm kiếm sản phẩm...">
+                <button type="submit" class="btn btn-dark text-white">Search</button>
+            </form>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <div class="ms-auto d-none d-lg-block">
+                <form action="{{ url_for('search') }}" method="GET" class="input-group">
+                    <span class="border-dark input-group-text bg-dark text-white">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </span>
+                    <input type="text" name="q" class="form-control border-dark" style="color:#7a7a7a" placeholder="Tìm kiếm sản phẩm...">
+                    <button type="submit" class="btn btn-dark text-white">Search</button>
+                </form>
+            </div>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link mx-2 text-uppercase active" aria-current="page" href="{{ url_for('home') }}">Trang Chủ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link mx-2 text-uppercase" href="{{ url_for('products') }}">Sản Phẩm</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link mx-2 text-uppercase" href="{{ url_for('blog') }}">Blog</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link mx-2 text-uppercase" href="{{ url_for('aboutus') }}">Về Chúng Tôi</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link mx-2 text-uppercase" href="{{ url_for('cart') }}"><i class="fa-solid fa-cart-shopping me-1"></i> Giỏ Hàng</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link mx-2 text-uppercase dropdown-toggle" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-solid fa-circle-user me-1"></i> Tài Khoản
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
+                        {% if current_user.is_authenticated %}
+                            <li><a class="dropdown-item" href="{{ url_for('logout') }}">Đăng Xuất</a></li>
+                        {% else %}
+                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Đăng Nhập</a></li>
+                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Đăng Ký</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+</nav>
+
+<!-- Modal Đăng Nhập -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">Đăng Nhập</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ url_for('login') }}">
+                    <input type="text" name="username" placeholder="Email hoặc Tài khoản" required>
+                    <input type="password" name="password" placeholder="Mật Khẩu" required>
+                    <div class="remember-me">
+                        <label for="remember">Nhớ mật khẩu</label>
+                        <input type="checkbox" id="remember" name="remember">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Đăng Nhập</button>
+                </form>
+                <p class="text-center mt-3">
+                    Bạn chưa có tài khoản? <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#registerModal">Đăng Ký</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Đăng Ký -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="registerModalLabel">Đăng Ký</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{{ url_for('register') }}">
+                    <input type="text" name="username" placeholder="Tên Tài khoản" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <input type="password" name="password" placeholder="Mật Khẩu" required>
+                    <input type="password" name="confirm_password" placeholder="Xác nhận Mật Khẩu" required>
+                    <button type="submit" class="btn btn-success w-100">Đăng Ký</button>
+                </form>
+                <p class="text-center mt-3">
+                    Đã có tài khoản? <a href="#" data-bs-dismiss="modal" data-bs-toggle="modal" data-bs-target="#loginModal">Đăng Nhập</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+
+<style>
+.flash-messages {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
+}   
+/* Header */
+.header {
+    background-color: #ffffff;
+    padding: 10px 0;
+    border-bottom: 1px solid #2a2a2a;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+}
+
+.header-left .logo {
+    height: 60px;
+    margin-right: 15px;
+}
+
+.header-slogan {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+.search-form {
+    position: relative;
+    max-width: 400px;
+}
+
+.search-form input {
+    width: 100%;
+    padding: 8px 15px;
+    border: 1px solid #2a2a2a;
+    border-radius: 4px;
+    font-size: 14px;
+    background: #fcf4f4;
+}
+
+.search-form button {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: #666;
+}
+
+.cart-icon {
+    position: relative;
+    font-size: 20px;
+    color: #333;
+}
+
+.cart-count {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background: #ff4444;
+    color: #fff;
+    font-size: 12px;
+    padding: 2px 5px;
+    border-radius: 50%;
+}
+.header-right .btn {
+    padding: 8px 15px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.modal-content {
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.modal-header {
+    border-bottom: none;
+}
+
+.modal-body input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.modal-body .btn {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+/* Menu Styles */
+.menu {
+    display: none;
+    background-color: #fafafa;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 999;
+}
+
+.menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+
+.menu ul li {
+    padding: 10px 20px;
+}
+
+.menu ul li a {
+    text-decoration: none;
+    color: #000;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.menu ul li a:hover {
+    background-color: #eee;
+}
+
+/* Menu Toggle Button */
+.menu-toggle {
+    display: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* Responsive Menu */
+@media (max-width: 768px) {
+    .menu {
+        display: none;
+        flex-direction: column;
+    }
+
+    .menu.show {
+        display: flex;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .header-left .logo {
+        height: 50px;
+        margin-right: 10px;
+    }
+}
+
+/* Desktop Menu */
+@media (min-width: 769px) {
+    .menu {
+        display: flex;
+        position: static;
+        flex-direction: row;
+        background: none;
+        box-shadow: none;
+    }
+
+    .menu ul {
+        flex-direction: row;
+        gap: 20px;
+    }
+}
+
+a {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.superNav {
+    font-size: 13px;
+}
+
+.form-control {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+@media screen and (max-width: 540px) {
+    .centerOnMobile {
+        text-align: center;
+    }
+}
+/* Container chính */
+.marquee-container {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(90deg, #ffffff, #d6d6d6); /* Tông màu sáng hơn, sang trọng */
+    color: #333; /* Màu chữ trung tính, dễ nhìn */
+    padding: 15px 0; /* Tăng khoảng cách trên dưới */
+    font-size: 1.3rem; /* Chữ lớn hơn một chút */
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 2px solid #ccc; /* Đường viền nhẹ phía dưới */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+}
+
+/* Phần chữ chạy (marquee) */
+.marquee {
+    display: inline-block;
+    white-space: nowrap;
+    animation: marquee 8s linear infinite; /* Chạy chữ chậm hơn để dễ nhìn */
+}
+
+.marquee span {
+    display: inline-block;
+    padding-left: 100%;
+    color: #060c29; /* Tô màu nổi bật cho chữ */
+}
+
+/* Hiệu ứng chạy chữ */
+@keyframes marquee {
+    0% {
+        transform: translateX(0%); /* Bắt đầu từ ngoài khung nhìn */
+    }
+    100% {
+        transform: translateX(-150%); /* Kết thúc ngoài khung nhìn bên trái */
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const loginButton = document.querySelector('#loginModal button[type="submit"]');
+    loginButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        const form = document.querySelector('#loginModal form');
+
+        fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Hiển thị thông báo thành công
+                alert('Đăng nhập thành công!');
+                // Ẩn modal đăng nhập
+                const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+                loginModal.hide();
+                // Reset trang
+                setTimeout(() => {
+                    location.reload();
+                }, 500); // Đợi một chút để modal đóng hoàn toàn
+            } else {
+                // Hiển thị thông báo lỗi
+                alert(data.message || 'Đăng nhập thất bại!');
+            }
+        })
+        .catch(err => {
+            console.error('Lỗi khi gửi yêu cầu:', err);
+            alert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+        });
+    });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const menuToggle = document.querySelector('.navbar-toggler');
+    const menu = document.querySelector('#navbarNavDropdown');
+
+    if (menuToggle && menu) {
+        // Toggle the menu when the hamburger icon is clicked
+        menuToggle.addEventListener('click', () => {
+            menu.classList.toggle('show');
+        });
+
+        // Close the menu when clicking outside of it
+        document.addEventListener('click', (event) => {
+            if (!menu.contains(event.target) && !menuToggle.contains(event.target)) {
+                menu.classList.remove('show');
+            }
+        });
+    } else {
+        console.error('Menu toggle button or menu not found.');
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const showLoginModal = urlParams.get('show_login_modal') === 'true';
+    const fromCart = urlParams.get('from_cart') === 'true';
+    const fromRegister = urlParams.get('from_register') === 'true';
+
+    if (showLoginModal || fromCart || fromRegister) {
+        const loginModal = document.getElementById('loginModal');
+        if (loginModal) {
+            const modal = new bootstrap.Modal(loginModal);
+            modal.show();
+        } else {
+            console.error('Login modal not found.');
+        }
+    }
+});
+</script>

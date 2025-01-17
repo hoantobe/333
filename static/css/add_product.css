@@ -1,0 +1,61 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4; /* Màu nền nhẹ nhàng */
+}
+
+.container {
+    margin-top: 30px;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background-color: #007bff; /* Màu nền cho tiêu đề */
+    color: white;
+    font-size: 1.5rem; /* Kích thước chữ cho tiêu đề */
+    text-align: center;
+}
+
+.form-group label {
+    font-weight: bold; /* Đậm chữ cho nhãn */
+}
+
+.btn {
+    border-radius: 5px;
+    padding: 10px; /* Tăng kích thước nút */
+    font-size: 1.1rem; /* Kích thước chữ cho nút */
+}
+
+.btn-success {
+    background-color: #28a745; /* Màu xanh cho nút lưu */
+    border: none;
+}
+
+.btn-secondary {
+    background-color: #6c757d; /* Màu xám cho nút quay lại */
+    border: none;
+}
+
+.custom-file-label::after {
+    content: "Chọn"; /* Thay đổi văn bản cho nút chọn file */
+}
+
+.custom-file-input:lang(en) ~ .custom-file-label::after {
+    content: "Chọn"; /* Thay đổi văn bản cho nút chọn file */
+}
+
+.form-text {
+    font-size: 0.9rem; /* Kích thước chữ cho thông báo */
+    color: #6c757d; /* Màu xám cho thông báo */
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container {
+        margin: 10px; /* Giảm khoảng cách cho màn hình nhỏ */
+    }
+} 
