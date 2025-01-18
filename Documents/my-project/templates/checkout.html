@@ -1,0 +1,87 @@
+{% extends "base.html" %} 
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh Toán</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <style>
+        /* CSS cho trang thanh toán */
+        .checkout-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="checkout-container">
+        <h2>Thanh Toán</h2>
+        <form action="{{ url_for('process_payment') }}" method="POST">
+            <div class="form-group">
+                <label class="form-label" for="name">Tên:</label>
+                <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="phone">Số điện thoại:</label>
+                <input type="tel" class="form-control" id="phone" name="phone" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="address">Địa chỉ:</label>
+                <input type="text" class="form-control" id="address" name="address" required>
+            </div>
+            <div class="form-group">
+                <label class="form-label" for="payment_method">Phương thức thanh toán:</label>
+                <select class="form-control" id="payment_method" name="payment_method" required>
+                    <option value="cash_on_delivery">Thanh toán khi nhận hàng</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Thanh Toán</button>
+        </form>
+    </div>
+</body>
+</html> 
+
+{% endblock %}

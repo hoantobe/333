@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}TOBE - Thời Trang Hàng Hiệu & Mua Sắm Thông Minh{% endblock %}
+
+{% block content %}
+<header class="intro-header">
+    <h1>TOBE - Thời Trang Hàng Hiệu & Mua Sắm Thông Minh</h1>
+    <p>Đồng hành cùng bạn trên hành trình tìm kiếm những sản phẩm ngon, bổ, rẻ nhất!</p>
+</header>
+
+<div class="container">
+    <section id="gioi-thieu" class="intro-section">
+        <div class="intro-content">
+            <h2 class="section-title">Chào Mừng Đến Với TOBE</h2>
+            <p class="intro-text">TOBE là trang web chuyên cung cấp thông tin hữu ích để bạn dễ dàng tìm kiếm và lựa chọn những sản phẩm giá rẻ, chất lượng trên các sàn thương mại điện tử. Với tiêu chí "Ngon, Bổ, Rẻ", website của chúng tôi mang đến:</p>
+            <ul class="intro-list">
+                <li>Tìm kiếm sản phẩm giá rẻ với chất lượng tốt nhất.</li>
+                <li>Tổng hợp và đưa ra đánh giá chân thực từ cộng đồng người dùng.</li>
+                <li>Thu thập và chia sẻ mã giảm giá giúp bạn mua sắm tiết kiệm hơn.</li>
+            </ul>
+            <p class="intro-text">Tại TOBE, chúng tôi cam kết cung cấp những thông tin đánh giá chính xác, khách quan và giúp khách hàng tìm được sản phẩm phù hợp nhất. Khám phá thêm nội dung thú vị tại <a href="{{ url_for('blog') }}">Blog TOBE</a> và <a href="{{ url_for('products') }}">Cửa Hàng</a> của chúng tôi.</p>
+        </div>
+        <div class="intro-image">
+            <img src="{{ url_for('static', filename='img/TOBEP.png') }}" alt="TOBE Fashion" class="img-fluid">
+        </div>
+    </section>
+
+    <section id="su-menh" class="mission-section">
+        <h2 class="section-title">Sứ Mệnh Của Chúng Tôi</h2>
+        <p>Đồng hành cùng bạn trên hành trình tìm kiếm những sản phẩm ngon, bổ, rẻ nhất, TOBE cam kết mang lại giá trị thực tế và trải nghiệm mua sắm đáng nhớ.</p>
+    </section>
+
+    <section id="dich-vu" class="services-section">
+        <h2 class="section-title">Dịch Vụ Của Chúng Tôi</h2>
+        <ul class="services-list">
+            <li><a href="{{ url_for('blog') }}">Blog TOBE</a> - Nơi chia sẻ những bài viết hữu ích về thời trang và mua sắm.</li>
+            <li><a href="{{ url_for('products') }}">Cửa Hàng</a> - Tìm kiếm và mua sắm các sản phẩm thời trang hàng hiệu yêu thích.</li>
+            <li>Chia sẻ mã giảm giá và chương trình ưu đãi từ các thương hiệu lớn.</li>
+        </ul>
+    </section>
+
+    <section id="lien-he" class="contact-section">
+        <h2 class="section-title">Liên Hệ Với Chúng Tôi</h2>
+        <p>Hãy gửi email cho chúng tôi tại <a href="mailto:hoan05052002@gmail.com">hoan05052002@gmail.com</a>. Chúng tôi luôn sẵn sàng lắng nghe ý kiến từ bạn!</p>
+    </section>
+</div>
+
+<style>
+    /* Header */
+    .intro-header {
+        background: linear-gradient(135deg, #020202, #525552);
+        color: white;
+        text-align: center;
+        padding: 50px 20px;
+        border-radius: 10px;
+        margin-bottom: 30px;
+    }
+
+    /* Container */
+    .container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 20px;
+    }
+
+    /* Section Titles */
+    .section-title {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+    }
+
+    /* Intro Section */
+    .intro-section {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 30px;
+        background: #f7f7f7;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+    }
+
+    .intro-content {
+        flex: 1;
+        padding-right: 20px;
+    }
+
+    .intro-list {
+        margin: 15px 0;
+        padding-left: 20px;
+    }
+
+    .intro-list li {
+        margin-bottom: 10px;
+        list-style: disc;
+    }
+
+    .intro-image {
+        flex: 1;
+        text-align: center;
+    }
+
+    .intro-image img {
+        max-width: 70%;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Mission Section */
+    .mission-section {
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+    }
+
+    /* Services Section */
+    .services-section {
+        padding: 30px;
+        background: #fafafa;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 30px;
+    }
+
+    .services-list li {
+        margin-bottom: 10px;
+    }
+
+    /* Contact Section */
+    .contact-section {
+        text-align: center;
+        padding: 30px;
+        background: #e6e6e6;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+</style>
+
+{% endblock %}

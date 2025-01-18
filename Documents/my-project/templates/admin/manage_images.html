@@ -1,0 +1,29 @@
+{% extends "admin/dashboard.html" %}
+
+{% block admin_content %}
+<div class="card">
+    <div class="card-header">
+        <h4>Quản lý ảnh</h4>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            {% for image in images %}
+            <div class="col-md-3 mb-4">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='uploads/' + image.filename) }}" 
+                         class="card-img-top" alt="{{ image.caption }}">
+                    <div class="card-body">
+                        <p class="card-text">{{ image.caption or 'Không có chú thích' }}</p>
+                        <small class="text-muted">Thuộc bài: {{ image.post.title }}</small>
+                        <button class="btn btn-danger btn-sm mt-2" 
+                                onclick="deleteImage({{ image.id }})">
+                            <i class="fas fa-trash"></i> Xóa
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

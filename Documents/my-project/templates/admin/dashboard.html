@@ -1,0 +1,286 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-2 d-none d-md-block bg-dark sidebar min-vh-100">
+            <div class="sidebar-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link text-white {% if active_page == 'dashboard' %}active{% endif %}" 
+                           href="{{ url_for('admin_dashboard') }}">
+                            <i class="fas fa-tachometer-alt"></i> Tổng quan
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white {% if active_page == 'products' %}active{% endif %}" 
+                           href="{{ url_for('manage_products') }}">
+                            <i class="fas fa-box"></i> Sản phẩm
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white {% if active_page == 'categories' %}active{% endif %}" 
+                           href="{{ url_for('manage_categories') }}">
+                            <i class="fas fa-tags"></i> Danh mục
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white {% if active_page == 'orders' %}active{% endif %}" 
+                           href="{{ url_for('manage_orders') }}">
+                            <i class="fas fa-shopping-cart"></i> Đơn hàng
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white {% if active_page == 'posts' %}active{% endif %}" 
+                           href="{{ url_for('manage_posts') }}">
+                            <i class="fas fa-newspaper"></i> Bài viết
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white {% if active_page == 'users' %}active{% endif %}" 
+                           href="{{ url_for('manage_users') }}">
+                            <i class="fas fa-users"></i> Người dùng
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main role="main" class="col-md-10 ml-sm-auto px-4 py-4">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="close" data-dismiss="alert">
+                                <span>&times;</span>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% if active_page == 'dashboard' %}
+            <!-- Dashboard Overview -->
+            <div class="row">
+                <div class="col-md-3 mb-4">
+                    <div class="card bg-primary text-white h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-title">Tổng đơn hàng</h6>
+                                    <h2 class="mb-0">{{ order_count }}</h2>
+                                </div>
+                                <i class="fas fa-shopping-cart fa-2x"></i>
+                            </div>
+                            <small>{{ new_order_count }} đơn hàng mới</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card bg-success text-white h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-title">Doanh thu</h6>
+                                    <h2 class="mb-0">
+                                        {% if total_revenue is defined %}
+                                            {{ "{:,.0f}".format(total_revenue) }}đ
+                                        {% else %}
+                                            0đ
+                                        {% endif %}
+                                    </h2>
+                                </div>
+                                <i class="fas fa-dollar-sign fa-2x"></i>
+                            </div>
+                            <small>Tháng {{ current_month }}</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card bg-info text-white h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-title">Sản phẩm</h6>
+                                    <h2 class="mb-0">{{ product_count }}</h2>
+                                </div>
+                                <i class="fas fa-box fa-2x"></i>
+                            </div>
+                            <small>{{ low_stock_count }} sản phẩm sắp hết</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="card bg-warning text-white h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="card-title">Người dùng</h6>
+                                    <h2 class="mb-0">{{ user_count }}</h2>
+                                </div>
+                                <i class="fas fa-users fa-2x"></i>
+                            </div>
+                            <small>{{ new_user_count }} người dùng mới</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Orders -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Đơn hàng gần đây</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Mã đơn</th>
+                                    <th>Khách hàng</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Trạng thái</th>
+                                    <th>Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if recent_orders %}
+                                    {% for order in recent_orders %}
+                                    <tr>
+                                        <td>#{{ order.id }}</td>
+                                        <td>{{ order.shipping_name }}</td>
+                                        <td>{{ "{:,.0f}".format(order.total_price) }}đ</td>
+                                        <td>
+                                            {% if order.status == 'pending' %}
+                                            <span class="badge badge-warning">Chờ xử lý</span>
+                                            {% elif order.status == 'processing' %}
+                                            <span class="badge badge-info">Đang xử lý</span>
+                                            {% elif order.status == 'completed' %}
+                                            <span class="badge badge-success">Hoàn thành</span>
+                                            {% else %}
+                                            <span class="badge badge-danger">Đã hủy</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="{{ url_for('manage_orders') }}#{{ order.id }}" 
+                                               class="btn btn-sm btn-info">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics Charts -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Doanh thu theo tháng</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if revenue_labels and revenue_data %}
+                                <canvas id="revenueChart"></canvas>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Top sản phẩm bán chạy</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if product_labels and product_data %}
+                                <canvas id="productsChart"></canvas>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% else %}
+            <!-- Other admin pages content -->
+            {% block admin_content %}{% endblock %}
+            {% endif %}
+        </main>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{% if active_page == 'dashboard' %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+try {
+    // Parse JSON data
+    const revenueLabels = JSON.parse('{{ revenue_labels | safe }}');
+    const revenueData = JSON.parse('{{ revenue_data | safe }}');
+    const productLabels = JSON.parse('{{ product_labels | safe }}');
+    const productData = JSON.parse('{{ product_data | safe }}');
+    
+    console.log("Revenue Labels:", revenueLabels);
+    console.log("Revenue Data:", revenueData);
+    console.log("Product Labels:", productLabels);
+    console.log("Product Data:", productData);
+    
+    // Revenue Chart
+    const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+    new Chart(revenueCtx, {
+        type: 'line',
+        data: {
+            labels: revenueLabels,
+            datasets: [{
+                label: 'Doanh thu',
+                data: revenueData,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Top Products Chart
+    const productsCtx = document.getElementById('productsChart').getContext('2d');
+    new Chart(productsCtx, {
+        type: 'bar',
+        data: {
+            labels: productLabels,
+            datasets: [{
+                label: 'Số lượng bán',
+                data: productData,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgb(54, 162, 235)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+} catch (error) {
+    console.error("Error parsing JSON:", error);
+}
+</script>
+{% endif %}
+{% endblock %}

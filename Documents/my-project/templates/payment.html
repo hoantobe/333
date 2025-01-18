@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="payment-policy">
+        <h1 class="text-center mb-5">Chính Sách Thanh Toán</h1>
+
+        <div class="alert alert-info">
+            <p class="mb-0">Cập nhật lần cuối: {{ current_time.strftime('%d/%m/%Y') }}</p>
+        </div>
+
+        <!-- Phương thức thanh toán -->
+        <section class="mb-5">
+            <h2>1. Phương thức thanh toán</h2>
+            <div class="row">
+                <div class="col-md-3 mb-4">
+                    <div class="payment-method-card">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <h4>Tiền mặt</h4>
+                        <ul>
+                            <li>Thanh toán khi nhận hàng (COD)</li>
+                            <li>Thanh toán tại cửa hàng</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="payment-method-card">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-credit-card"></i>
+                        </div>
+                        <h4>Thẻ ngân hàng</h4>
+                        <ul>
+                            <li>Thẻ ATM nội địa</li>
+                            <li>Visa/Mastercard</li>
+                            <li>JCB</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="payment-method-card">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <h4>Chuyển khoản</h4>
+                        <ul>
+                            <li>Internet Banking</li>
+                            <li>Mobile Banking</li>
+                            <li>QR Code</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="payment-method-card">
+                        <div class="icon-wrapper">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <h4>Ví điện tử</h4>
+                        <ul>
+                            <li>Momo</li>
+                            <li>ZaloPay</li>
+                            <li>VNPay</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hướng dẫn thanh toán -->
+        <section class="mb-5">
+            <h2>2. Hướng dẫn thanh toán</h2>
+            <div class="accordion" id="paymentGuide">
+                <div class="accordion-item">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#codGuide">
+                            Thanh toán khi nhận hàng (COD)
+                        </button>
+                    </h3>
+                    <div id="codGuide" class="accordion-collapse collapse show" data-bs-parent="#paymentGuide">
+                        <div class="accordion-body">
+                            <ol>
+                                <li>Kiểm tra đơn hàng khi nhận hàng</li>
+                                <li>Thanh toán cho nhân viên giao hàng</li>
+                                <li>Giữ lại biên nhận (nếu có)</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#bankGuide">
+                            Chuyển khoản ngân hàng
+                        </button>
+                    </h3>
+                    <div id="bankGuide" class="accordion-collapse collapse" data-bs-parent="#paymentGuide">
+                        <div class="accordion-body">
+                            <div class="bank-info">
+                                <p><strong>Thông tin tài khoản:</strong></p>
+                                <ul>
+                                    <li>Ngân hàng: Vietcombank</li>
+                                    <li>Số tài khoản: 1234567890</li>
+                                    <li>Chủ tài khoản: CÔNG TY TOBE</li>
+                                    <li>Nội dung: [Mã đơn hàng] - [Số điện thoại]</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h3 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#ewalletGuide">
+                            Ví điện tử
+                        </button>
+                    </h3>
+                    <div id="ewalletGuide" class="accordion-collapse collapse" data-bs-parent="#paymentGuide">
+                        <div class="accordion-body">
+                            <ol>
+                                <li>Chọn phương thức thanh toán qua ví điện tử</li>
+                                <li>Quét mã QR hoặc nhập thông tin</li>
+                                <li>Xác nhận thanh toán trên ứng dụng</li>
+                                <li>Đợi xác nhận từ hệ thống</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bảo mật thanh toán -->
+        <section class="mb-5">
+            <h2>3. Bảo mật thanh toán</h2>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="security-card">
+                        <div class="card-header">
+                            <i class="fas fa-shield-alt"></i>
+                            <h4>Tiêu chuẩn bảo mật</h4>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>Chứng chỉ bảo mật SSL</li>
+                                <li>Mã hóa thông tin thanh toán</li>
+                                <li>Xác thực 2 lớp</li>
+                                <li>Tuân thủ quy định PCI DSS</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="security-card">
+                        <div class="card-header">
+                            <i class="fas fa-user-shield"></i>
+                            <h4>Cam kết bảo vệ</h4>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li>Bảo mật thông tin cá nhân</li>
+                                <li>Không lưu trữ thông tin thẻ</li>
+                                <li>Mã hóa đường truyền</li>
+                                <li>Giám sát giao dịch 24/7</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quy định và lưu ý -->
+        <section class="mb-5">
+            <h2>4. Quy định và lưu ý</h2>
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>Quy định chung</h4>
+                            <ul>
+                                <li>Đơn hàng được xác nhận sau khi thanh toán thành công</li>
+                                <li>Hoàn tiền trong vòng 24h nếu giao dịch lỗi</li>
+                                <li>Giữ lại hóa đơn và biên nhận thanh toán</li>
+                                <li>Liên hệ CSKH nếu cần hỗ trợ</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h4>Lưu ý quan trọng</h4>
+                            <ul class="warning-list">
+                                <li>Không chia sẻ thông tin đăng nhập</li>
+                                <li>Kiểm tra kỹ thông tin trước khi thanh toán</li>
+                                <li>Chỉ thanh toán trên website chính thức</li>
+                                <li>Cập nhật ứng dụng ngân hàng thường xuyên</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+
+<style>
+.payment-policy h2 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #eee;
+}
+
+.payment-method-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    height: 100%;
+    transition: transform 0.3s;
+}
+
+.payment-method-card:hover {
+    transform: translateY(-5px);
+}
+
+.icon-wrapper {
+    width: 60px;
+    height: 60px;
+    background: #f8f9fa;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+}
+
+.icon-wrapper i {
+    font-size: 24px;
+    color: #007bff;
+}
+
+.payment-method-card ul {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 15px;
+}
+
+.payment-method-card li {
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.security-card {
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    height: 100%;
+}
+
+.security-card .card-header {
+    background: #007bff;
+    color: white;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+}
+
+.security-card .card-header i {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.security-card .card-header h4 {
+    margin: 0;
+}
+
+.security-card .card-body {
+    padding: 20px;
+}
+
+.warning-list li {
+    color: #dc3545;
+}
+
+.accordion-button:not(.collapsed) {
+    background-color: #e7f1ff;
+    color: #0c63e4;
+}
+
+.bank-info {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+@media (max-width: 768px) {
+    .payment-method-card {
+        margin-bottom: 20px;
+    }
+}
+</style>
+{% endblock %} 
