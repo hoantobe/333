@@ -2,7 +2,6 @@
 
 {% block content %}
 <div class="container mt-4">
-
     <h1 class="category-title mb-4">{{ category.name }}</h1>
 
     <div class="row">
@@ -11,12 +10,15 @@
             <div class="product-card">
                 <a href="{{ url_for('product', product_id=product.id) }}" class="product-link">
                     <div class="product-image">
-                        {% if product.image_files and product.image_files|length > 0 %}
-                        <img src="{{ url_for('static', filename='uploads/images/products/' + product.image_files[0]) }}" 
-                             alt="{{ product.name }}" class="img-fluid">
+                        {% if product.image_files %}
+                            <img src="{{ product.image_files[0] }}" 
+                                 alt="{{ product.name }}" 
+                                 class="img-fluid"
+                                 onerror="this.onerror=null; this.src='https://res.cloudinary.com/dxsxxz9kx/image/upload/v1710670604/default-product_zsfng7.jpg';">
                         {% else %}
-                        <img src="{{ url_for('static', filename='img/default.jpg') }}" 
-                             alt="No image available" class="img-fluid">
+                            <img src="https://res.cloudinary.com/dxsxxz9kx/image/upload/v1710670604/default-product_zsfng7.jpg" 
+                                 alt="No image available" 
+                                 class="img-fluid">
                         {% endif %}
                     </div>
                     <div class="product-info">
@@ -81,6 +83,7 @@
     overflow: hidden;
 }
 
+
 .product-image img {
     position: absolute;
     top: 0;
@@ -88,7 +91,10 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.3s ease;
 }
+
+
 
 .product-info {
     padding: 15px;
