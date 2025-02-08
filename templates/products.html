@@ -129,8 +129,93 @@
         {% endif %}
     </div>
 </div>
+<!-- Add this after the products row div -->
+{% if products.pages > 1 %}
+<nav aria-label="Product pagination" class="my-4">
+    <ul class="pagination justify-content-center">
+        <!-- Previous page -->
+        {% if products.has_prev %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('products', page=products.prev_num, category=selected_category, sort=request.args.get('sort', 'newest')) }}">
+                <i class="fas fa-chevron-left"></i>
+            </a>
+        </li>
+        {% endif %}
 
+        <!-- Page numbers -->
+        {% for page_num in products.iter_pages(left_edge=2, left_current=2, right_current=3, right_edge=2) %}
+            {% if page_num %}
+                <li class="page-item {% if page_num == products.page %}active{% endif %}">
+                    <a class="page-link" href="{{ url_for('products', page=page_num, category=selected_category, sort=request.args.get('sort', 'newest')) }}">
+                        {{ page_num }}
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled"><span class="page-link">...</span></li>
+            {% endif %}
+        {% endfor %}
+
+        <!-- Next page -->
+        {% if products.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('products', page=products.next_num, category=selected_category, sort=request.args.get('sort', 'newest')) }}">
+                <i class="fas fa-chevron-right"></i>
+            </a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
 <style>
+    .pagination {
+    gap: 8px;
+}
+
+.page-link {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    border: none;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.page-link:hover {
+    background: #007bff;
+    color: white;
+    transform: scale(1.1);
+}
+
+.page-item.active .page-link {
+    background: linear-gradient(45deg, #007bff, #00c6ff);
+    color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.page-item.disabled .page-link {
+    background: #e9ecef;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+/* Responsive cho mobile */
+@media (max-width: 576px) {
+    .pagination {
+        gap: 4px;
+    }
+    
+    .page-link {
+        width: 35px;
+        height: 35px;
+        font-size: 12px;
+    }
+}
     /* Giá sản phẩm */
     .product-price-wrapper {
         font-size: 1rem;
