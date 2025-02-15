@@ -9,132 +9,337 @@
 
 <url>
   <loc>https://tobestore.online/</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>1.00</priority>
 </url>
 <url>
   <loc>https://tobestore.online/home</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://tobestore.online/products</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://tobestore.online/blog</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://tobestore.online/aboutus</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://tobestore.online/home?show_login_modal=True</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <loc>https://tobestore.online/home?show_login_modal=True&amp;from_cart=True</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://tobestore.online/category/1</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>https://tobestore.online/product/7</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <loc>https://tobestore.online/product/16</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/product/18</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/product/19</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/product/20</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/category/2</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/product/15</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/product/26</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/product/31</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/product/32</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/category/5</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/product/17</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/product/22</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/product/33</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/product/34</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/category/6</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/product/21</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/product/23</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/product/24</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/product/25</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/category/7</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/product/27</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/product/28</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/product/29</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.80</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/product/30</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://tobestore.online/posts/5-mon-do-thoi-trang-phai-co-cho-tet-at-ty-2025-ruc-ro</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://tobestore.online/chinh-sach-bao-mat</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://tobestore.online/chinh-sach-van-chuyen</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://tobestore.online/chinh-sach-doi-tra</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://tobestore.online/chinh-sach-thanh-toan</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://tobestore.online/chinh-sach-affiliate-tobe</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://tobestore.online/contact</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>0.80</priority>
 </url>
 <url>
   <loc>https://tobestore.online/products?category=K%C3%ADnh</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://tobestore.online/products?category=%C3%81o</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/products?category=Gi%C3%A0y</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/products?category=Th%E1%BB%9Di+Trang+N%E1%BB%AF</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/products?category=Qu%E1%BA%A7n</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://tobestore.online/products?sort=newest</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://tobestore.online/products?sort=price-asc</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://tobestore.online/products?sort=price-desc</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/products?page=1&amp;sort=newest</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.64</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/products?page=2&amp;sort=newest</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>0.64</priority>
 </url>
 <url>
   <loc>https://tobestore.online/products?category=K%C3%ADnh&amp;sort=newest</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://tobestore.online/products?category=K%C3%ADnh&amp;sort=price-asc</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://tobestore.online/products?category=K%C3%ADnh&amp;sort=price-desc</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://tobestore.online/products?category=%C3%81o&amp;sort=newest</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://tobestore.online/products?category=%C3%81o&amp;sort=price-asc</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 <url>
   <loc>https://tobestore.online/products?category=%C3%81o&amp;sort=price-desc</loc>
-  <lastmod>2025-01-13T06:44:02+00:00</lastmod>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/products?category=Gi%C3%A0y&amp;sort=newest</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/products?category=Gi%C3%A0y&amp;sort=price-asc</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/products?category=Gi%C3%A0y&amp;sort=price-desc</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/products?category=Th%E1%BB%9Di+Trang+N%E1%BB%AF&amp;sort=newest</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/products?category=Th%E1%BB%9Di+Trang+N%E1%BB%AF&amp;sort=price-asc</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/products?category=Th%E1%BB%9Di+Trang+N%E1%BB%AF&amp;sort=price-desc</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/products?category=Qu%E1%BA%A7n&amp;sort=newest</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/products?category=Qu%E1%BA%A7n&amp;sort=price-asc</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/products?category=Qu%E1%BA%A7n&amp;sort=price-desc</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/products?page=1&amp;sort=price-asc</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/products?page=2&amp;sort=price-asc</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/products?page=1&amp;sort=price-desc</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
+  <priority>0.51</priority>
+</url>
+<url>
+  <loc>https://tobestore.online/products?page=2&amp;sort=price-desc</loc>
+  <lastmod>2025-02-15T03:55:56+00:00</lastmod>
   <priority>0.51</priority>
 </url>
 
