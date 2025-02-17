@@ -358,37 +358,63 @@ a {
 /* Container chính */
 .marquee-container {
     position: relative;
+    width: 100%;
     overflow: hidden;
-    background: linear-gradient(90deg, #ffffff, #d6d6d6); /* Tông màu sáng hơn, sang trọng */
-    color: #333; /* Màu chữ trung tính, dễ nhìn */
-    padding: 15px 0; /* Tăng khoảng cách trên dưới */
-    font-size: 1.3rem; /* Chữ lớn hơn một chút */
-    font-weight: bold;
-    text-align: center;
-    border-bottom: 2px solid #ccc; /* Đường viền nhẹ phía dưới */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Đổ bóng nhẹ */
+    background: linear-gradient(90deg, #141212, #8b7878, #2e2b2b);
+    padding: 10px 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Phần chữ chạy (marquee) */
+/* Phần chữ chạy */
 .marquee {
-    display: inline-block;
+    display: flex;
+    width: fit-content;
+    animation: marquee 20s linear infinite;
     white-space: nowrap;
-    animation: marquee 8s linear infinite; /* Chạy chữ chậm hơn để dễ nhìn */
 }
 
 .marquee span {
     display: inline-block;
-    padding-left: 100%;
-    color: #060c29; /* Tô màu nổi bật cho chữ */
+    padding: 0 40px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffffff;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    font-family: 'Roboto', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-/* Hiệu ứng chạy chữ */
+/* Hiệu ứng hover */
+.marquee:hover {
+    animation-play-state: paused;
+}
+
+/* Keyframes cho animation */
 @keyframes marquee {
     0% {
-        transform: translateX(0%); /* Bắt đầu từ ngoài khung nhìn */
+        transform: translateX(100%);
     }
     100% {
-        transform: translateX(-150%); /* Kết thúc ngoài khung nhìn bên trái */
+        transform: translateX(-100%);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .marquee span {
+        font-size: 14px;
+        padding: 0 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .marquee span {
+        font-size: 12px;
+        padding: 0 15px;
+    }
+    .marquee-container {
+        padding: 8px 0;
     }
 }
 </style>
