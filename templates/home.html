@@ -973,8 +973,124 @@ a.btn-custom:hover {
 
     
 
-    
+    /* Định dạng phần logo đối tác */
+.ecommerce-logos {
+    padding: 40px 0;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin: 30px 0;
+}
 
+.ecommerce-logos h3 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 30px;
+}
+
+.logo-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    padding: 0 20px;
+}
+
+.ecommerce-logo {
+    width: 150px;
+    height: 80px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+    filter: grayscale(100%);
+}
+
+.ecommerce-logo:hover {
+    transform: translateY(-5px);
+    filter: grayscale(0%);
+}
+
+/* Hình ảnh giới thiệu */
+.intro-image {
+    flex: 1;
+    padding: 20px;
+}
+
+.intro-image img {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+}
+
+.intro-image img:hover {
+    transform: scale(1.05);
+}
+
+/* Hình ảnh sản phẩm trong carousel */
+.carousel-item img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.card-img-top {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .card-img-top {
+    transform: scale(1.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .logo-container {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    }
+
+    .ecommerce-logo {
+        width: 100px;
+        height: 60px;
+    }
+
+    .carousel-item img {
+        height: 200px;
+    }
+
+    .card-img-top {
+        height: 200px;
+    }
+
+    .intro-image img {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .logo-container {
+        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    }
+
+    .ecommerce-logo {
+        width: 80px;
+        height: 50px;
+    }
+
+    .carousel-item img {
+        height: 150px;
+    }
+
+    .card-img-top {
+        height: 180px;
+    }
+}
 </style>
     
     <!-- Quick View Modal -->
