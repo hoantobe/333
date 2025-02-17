@@ -74,18 +74,68 @@
         }
 
         /* Định dạng hình ảnh */
-        img {
-            width: 100%;
-            height: auto; /* Duy trì tỷ lệ hình ảnh */
-            object-fit: cover;
-            border-radius: 8px; /* Bo góc nhẹ */
-        }
+           /* Reset cơ bản cho hình ảnh */
+    img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
 
-        .product-image {
-            width: 300px; /* Hoặc % tuỳ vào bố cục */
-            height: 300px;
-            object-fit: cover;
-        }
+    /* Hình ảnh sản phẩm */
+    .product-image {
+        width: 100%;
+        height: 300px;
+        object-fit: cover;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    /* Hình ảnh trong carousel */
+    .carousel-item img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 0;
+    }
+
+    /* Hình ảnh thumbnail */
+    .thumbnail-image {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 4px;
+    }
+
+    /* Hình ảnh logo */
+    .logo-image {
+        width: 150px;
+        height: auto;
+        border-radius: 0;
+    }
+
+    /* Hình ảnh avatar */
+    .avatar-image {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    /* Hình ảnh icon */
+    .icon-image {
+        width: 24px;
+        height: 24px;
+        object-fit: contain;
+        border-radius: 0;
+    }
+
+    /* Hình ảnh trong bài viết */
+    .article-image {
+        width: 100%;
+        max-height: 500px;
+        object-fit: contain;
+        margin: 15px 0;
+    }
 
         /* Zalo Button */
         .zalo-button {
@@ -139,24 +189,42 @@
 
         /* Responsive cỡ chữ và hình ảnh */
         @media (max-width: 768px) {
-            body {
-                font-size: 14px;
-            }
-            img {
-                width: 100%;
-                height: auto;
-            }
+        .product-image {
+            height: 200px;
         }
 
-        @media (max-width: 480px) {
-            body {
-                font-size: 12px;
-            }
-            img {
-                width: 100%;
-                height: auto;
-            }
+        .carousel-item img {
+            height: 300px;
         }
+
+        .thumbnail-image {
+            width: 80px;
+            height: 80px;
+        }
+
+        .logo-image {
+            width: 120px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .product-image {
+            height: 150px;
+        }
+
+        .carousel-item img {
+            height: 200px;
+        }
+
+        .thumbnail-image {
+            width: 60px;
+            height: 60px;
+        }
+
+        .logo-image {
+            width: 100px;
+        }
+    }
     </style>
 
     {% block head %}{% endblock %}
