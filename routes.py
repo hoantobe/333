@@ -1462,3 +1462,6 @@ def robots_txt():
     content = "User-agent: *\nDisallow:"
     return Response(content, mimetype="text/plain")
 
+@app.route('/dmca-validation.html')
+def policies():
+    return render_template('dmca-validation.html')
