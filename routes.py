@@ -40,7 +40,7 @@ app.jinja_env.filters['number_format'] = number_format
 # Gọi hàm khi khởi động app
 
 
-@app.route('/')
+
 @app.route('/')
 def redirect_to_home():
     return redirect(url_for('home'), code=301)
