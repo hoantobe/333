@@ -1463,5 +1463,5 @@ def robots_txt():
     return Response(content, mimetype="text/plain")
 
 @app.route('/dmca-validation.html')
-def policies():
+def dmca():
     return render_template('dmca-validation.html')
